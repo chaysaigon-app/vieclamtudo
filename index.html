@@ -13,92 +13,103 @@
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 10px; } /* Cuộn màu xanh nhạt */
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #93c5fd; }
     </style>
 </head>
-<body class="bg-[#FAFAFA] text-gray-900 flex flex-col min-h-screen">
+<body class="bg-[#F8FAFC] text-slate-900 flex flex-col min-h-screen">
 
-    <header class="bg-white/90 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
+    <header class="bg-white/95 backdrop-blur-md border-b-2 border-blue-600 sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
-            <h1 class="text-base md:text-xl font-bold tracking-tight text-blue-700 uppercase truncate pr-4">Sàn Dịch Vụ Đa Ngành Nghề Toàn Quốc</h1>
-            <a href="dang-ky.html" class="text-xs md:text-sm font-semibold bg-blue-600 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full hover:bg-blue-700 transition-colors shadow-sm shrink-0">
+            <h1 class="text-base md:text-xl font-black tracking-tight text-blue-800 uppercase truncate pr-4">Sàn Dịch Vụ Đa Ngành Nghề Toàn Quốc</h1>
+            <a href="dang-ky.html" class="text-xs md:text-sm font-bold bg-blue-600 text-white px-5 py-2.5 rounded-full hover:bg-blue-700 hover:shadow-md hover:shadow-blue-200 transition-all shrink-0">
                 Trở thành đối tác
             </a>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-5 py-10 flex-grow">
-        <div class="mb-10">
-            <div class="mb-8">
-                <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-4">Tìm là thấy, tin là dùng!</h2>
-                <p class="text-sm md:text-base text-gray-600 font-medium leading-relaxed max-w-4xl">Bất kể bạn cần gì, chúng tôi đều có đối tác sẵn sàng! 🛠️🧹💆‍♂️ Từ những hỏng hóc nhỏ trong nhà đến nhu cầu làm đẹp, học nghề, gia sư, tập luyện chuyên nghiệp. Giá cả công khai & Dịch vụ chu đáo. Khám phá ngay hôm nay!</p>
-            </div>
-            
-            <div class="flex flex-col md:flex-row gap-3 mb-5">
-                <div class="relative flex-1">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-400 text-sm"></i>
-                    <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Tìm kiếm tên, kỹ năng..." 
-                           class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+    <main class="flex-grow">
+        
+        <section class="bg-gradient-to-b from-blue-50/80 to-transparent pt-10 pb-6 px-5 border-b border-blue-50">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-8 text-center md:text-left">
+                    <h2 class="text-3xl md:text-5xl font-black tracking-tight text-slate-900 mb-4">
+                        Tìm là thấy, <span class="text-blue-600">tin là dùng!</span>
+                    </h2>
+                    <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed max-w-4xl">
+                        Bất kể bạn cần gì, chúng tôi đều có đối tác sẵn sàng! 🛠️🧹💆‍♂️ Từ những hỏng hóc nhỏ trong nhà đến nhu cầu làm đẹp, học nghề, gia sư, tập luyện chuyên nghiệp. Giá cả công khai & Dịch vụ chu đáo. Khám phá ngay hôm nay!
+                    </p>
                 </div>
-                <select id="jobSelect" onchange="handleDropdownChange('job')" class="py-3 px-4 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 outline-none appearance-none cursor-pointer focus:border-blue-500">
-                    <option value="">Tất cả lĩnh vực</option>
-                </select>
-                <select id="provinceSelect" onchange="handleDropdownChange('province')" class="py-3 px-4 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 outline-none appearance-none cursor-pointer focus:border-blue-500">
-                    <option value="">Toàn quốc (63 tỉnh thành)</option>
-                </select>
-            </div>
+                
+                <div class="flex flex-col md:flex-row gap-3 mb-6">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-blue-400 text-sm"></i>
+                        <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Tìm kiếm tên, kỹ năng..." 
+                               class="w-full pl-10 pr-4 py-3 bg-white border border-blue-100 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition shadow-sm">
+                    </div>
+                    <select id="jobSelect" onchange="handleDropdownChange('job')" class="py-3 px-4 bg-white border border-blue-100 rounded-xl text-sm font-semibold text-slate-700 outline-none appearance-none cursor-pointer focus:border-blue-500 shadow-sm hover:border-blue-300 transition">
+                        <option value="">Tất cả lĩnh vực</option>
+                    </select>
+                    <select id="provinceSelect" onchange="handleDropdownChange('province')" class="py-3 px-4 bg-white border border-blue-100 rounded-xl text-sm font-semibold text-slate-700 outline-none appearance-none cursor-pointer focus:border-blue-500 shadow-sm hover:border-blue-300 transition">
+                        <option value="">Toàn quốc (63 tỉnh thành)</option>
+                    </select>
+                </div>
 
-            <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Hoặc chọn nhanh:</p>
-                <div class="flex items-center gap-2 overflow-x-auto hide-scroll pb-3 border-b border-gray-50 mb-3" id="jobTagsContainer">
-                    <span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Ngành:</span>
-                </div>
-                <div class="flex items-center gap-2 overflow-x-auto hide-scroll" id="provinceTagsContainer">
-                    <span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Khu vực:</span>
+                <div class="bg-white border border-blue-100 p-4 rounded-2xl shadow-sm">
+                    <p class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Hoặc chọn nhanh:</p>
+                    <div class="flex items-center gap-2 overflow-x-auto hide-scroll pb-3 border-b border-blue-50 mb-3" id="jobTagsContainer">
+                        <span class="text-xs font-bold text-slate-500 mr-2 shrink-0 w-16">Ngành:</span>
+                    </div>
+                    <div class="flex items-center gap-2 overflow-x-auto hide-scroll" id="provinceTagsContainer">
+                        <span class="text-xs font-bold text-slate-500 mr-2 shrink-0 w-16">Khu vực:</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="workerGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-10"></div>
+        <section class="max-w-7xl mx-auto px-5 py-10">
+            <div id="workerGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-10">
+                </div>
+        </section>
+
     </main>
 
-    <footer class="bg-white border-t border-gray-200 py-10 px-5">
+    <footer class="bg-white border-t-4 border-blue-100 py-12 px-5">
         <div class="max-w-7xl mx-auto">
             <div class="mb-8">
-                <h3 class="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em] mb-4">Top 100 Dịch Vụ Được Quan Tâm Nhiều Nhất</h3>
-                <p class="text-[10px] text-gray-900 leading-loose text-justify font-normal">
+                <h3 class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] mb-4 border-l-2 border-blue-600 pl-3">Top 100 Dịch Vụ Được Quan Tâm Nhiều Nhất</h3>
+                <p class="text-[10px] text-slate-900 leading-loose text-justify font-normal">
                     Sửa chữa điện nước tại nhà, Sửa điện lạnh (máy lạnh/máy giặt/tủ lạnh), Thông tắc cống/Hút hầm cầu, Vệ sinh nhà cửa/Vệ sinh công nghiệp, Diệt côn trùng/Mối mọt, Chuyển nhà/Chuyển văn phòng trọn gói, Sửa khóa tại nhà (khóa cửa/khóa xe), Giặt ủi/Giặt rèm/Giặt sofa tận nơi, Chăm sóc thú cưng (Cắt tỉa lông/Hotel), Chăm sóc cây cảnh/Thiết kế sân vườn, Sửa chữa và đánh bóng đồ gỗ nội thất, Sơn nhà/Chống thấm dột, Sửa chữa mái tôn/Cửa cuốn, Khoan cắt bê tông, Lắp đặt và sửa chữa camera an ninh, Đặt tiệc tại nhà/Tiệc BBQ, Dịch vụ nấu cỗ cưới hỏi/giỗ chạp, Giao đồ ăn/Thức uống tận nơi, Đặt bàn nhà hàng, Nhà hàng/quán ăn ẩm thực chay, Quán cà phê/Trà sữa, Cung cấp thực phẩm sạch/Hữu cơ nông trại, Đặt phòng lưu trú (Khách sạn/Homestay), Thiết kế thực đơn (Menu), Chụp ảnh món ăn quảng cáo, Giao nước uống đóng bình, Cho thuê thiết bị sự kiện và bàn ghế tiệc, Cung cấp sỉ nguyên liệu F&B, Dịch vụ pha chế (Bartender) sự kiện, Tư vấn thiết kế và setup quán ăn/café, Cắt tóc/Tạo mẫu tóc (Salon/Barber), Spa/Massage trị liệu phục hồi, Chăm sóc da chuyên sâu (Skincare), Làm móng (Nail art), Trang điểm (Makeup) dự tiệc/cô dâu, Huấn luyện viên thể hình cá nhân (PT), Dạy Yoga/Pilates tại nhà hoặc trung tâm, Bác sĩ/Điều dưỡng khám bệnh tại nhà, Chăm sóc người già/Người bệnh, Chăm sóc mẹ và bé sau sinh, Tư vấn dinh dưỡng cá nhân, Châm cứu/Bấm huyệt/Đông y, Nha khoa thẩm mỹ/Chăm sóc răng miệng, Đo khám mắt/Cắt kính, Tư vấn tâm lý, Gia sư các môn học tại nhà, Trung tâm tiếng Anh/Ngoại ngữ, Dạy tin học văn phòng, Dạy nhạc cụ (Piano/Guitar)/Thanh nhạc, Dạy vẽ/Mỹ thuật sáng tạo, Dạy bơi lội, Đào tạo kỹ năng mềm/Kỹ năng giao tiếp, Dạy nghề (Nấu ăn/Pha chế/Spa/Cắt tóc), Tư vấn du học và định cư, Dịch thuật tài liệu đa ngôn ngữ, Tổ chức sự kiện/Khai trương/Khánh thành, Chụp ảnh/Quay phim sự kiện, Chụp ảnh chân dung/Ảnh gia đình, Chụp ảnh cưới/Quay phóng sự cưới, Trang trí tiệc sinh nhật/Gia tiên cưới hỏi, Cung cấp MC/ca sĩ/ban nhạc, Cho thuê trang phục biểu diễn/Dạ hội, Thu âm/Lồng tiếng chuyên nghiệp, Thiết kế thiệp cưới/Thư mời sự kiện, Cắm hoa nghệ thuật/Điện hoa, Tổ chức Teambuilding cho doanh nghiệp, Dịch vụ múa lân sư rồng, Cho thuê âm thanh/Ánh sáng/Màn hình LED, Thiết kế và thi công bảng hiệu quảng cáo, Sản xuất kịch bản truyền thông/Sân khấu, Thiết kế website chuyên nghiệp, Lập trình ứng dụng di động (Mobile App), Quản trị và chăm sóc Fanpage, Chạy quảng cáo (Facebook/Google/TikTok Ads), Viết bài PR/Content Marketing, Thiết kế logo và bộ nhận diện thương hiệu, Tối ưu hóa công cụ tìm kiếm (SEO), Cài đặt phần mềm/Sửa chữa máy tính, Khôi phục dữ liệu ổ cứng, Lắp đặt và thi công mạng LAN/Wifi, Tư vấn giải pháp chuyển đổi số, Chỉnh sửa và dựng video (Video editing), Cung cấp dịch vụ tổng đài ảo (CSKH), Vẽ minh họa/Thiết kế 3D, Xây dựng phần mềm quản lý theo yêu cầu, Tư vấn thành lập doanh nghiệp/Giấy phép kinh doanh, Dịch vụ kế toán trọn gói/Báo cáo thuế, Tư vấn pháp lý/Dịch vụ luật sư, Đăng ký bảo hộ sở hữu trí tuệ, Khắc dấu công ty/Chữ ký số, In ấn bao bì/decal/tài liệu văn phòng, Cho thuê văn phòng ảo/Co-working space, Giao hàng siêu tốc/Chuyển phát nội thành, Cho thuê xe máy/Ô tô tự lái, Xe ghép/Xe tiện chuyến liên tỉnh, Đặt vé máy bay/Tour du lịch trọn gói, Dịch vụ khai báo hải quan/Xuất nhập khẩu, Dịch vụ bảo vệ/Vệ sĩ chuyên nghiệp, Môi giới và ký gửi bất động sản, Định giá tài sản/Bất động sản.
                 </p>
             </div>
-            <div class="pt-8 border-t border-gray-100">
-                <h3 class="text-[10px] font-bold text-gray-900 uppercase tracking-[0.2em] mb-4">Miễn trừ trách nhiệm:</h3>
-                <p class="text-[10px] text-gray-900 leading-loose text-justify font-normal">
+            <div class="pt-8 border-t border-blue-50">
+                <h3 class="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em] mb-4 border-l-2 border-blue-600 pl-3">Miễn trừ trách nhiệm:</h3>
+                <p class="text-[10px] text-slate-900 leading-loose text-justify font-normal">
                     Sàn Dịch Vụ Đa Ngành Nghề Toàn Quốc hoạt động với vai trò là nền tảng trung gian kết nối thông tin giữa khách hàng và các nhà cung cấp dịch vụ/sản phẩm. Chúng tôi không trực tiếp tham gia vào quá trình giao dịch, không thu phí trung gian và không lưu trữ bất kỳ thông tin thanh toán nào giữa các bên. Mọi trách nhiệm pháp lý liên quan đến hoạt động kinh doanh, chất lượng dịch vụ/sản phẩm, cam kết bảo hành và tính xác thực của nội dung quảng cáo hoàn toàn thuộc về nhà cung cấp trước khách hàng và các cơ quan chức năng theo đúng quy định của pháp luật.
                 </p>
             </div>
         </div>
     </footer>
 
-    <a href="https://zalo.me/0909108890" target="_blank" class="fixed bottom-6 right-6 bg-[#0068ff] text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 hover:scale-105 transition-all z-30">
+    <a href="https://zalo.me/0909108890" target="_blank" class="fixed bottom-6 right-6 bg-[#0068ff] text-white w-14 h-14 rounded-full shadow-lg shadow-blue-300 flex items-center justify-center hover:bg-blue-700 hover:scale-105 transition-all z-30">
         <i class="fa-solid fa-headset text-xl"></i>
     </a>
 
-    <div id="detailModal" class="fixed inset-0 z-40 hidden flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+    <div id="detailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
         <div class="bg-white w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl shadow-2xl relative overflow-hidden">
-            <button onclick="closeModal()" class="absolute top-5 right-5 bg-gray-100 text-gray-500 w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition z-10"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeModal()" class="absolute top-5 right-5 bg-blue-50 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all z-10"><i class="fa-solid fa-xmark"></i></button>
             <div id="modalBody" class="p-6 md:p-10 overflow-y-auto custom-scroll"></div>
         </div>
     </div>
 
-    <div id="reportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+    <div id="reportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 relative">
-            <button onclick="closeReportModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-xl font-bold text-gray-900 mb-5">Báo cáo vi phạm</h3>
+            <button onclick="closeReportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900 bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-xl font-black text-blue-900 mb-5">Báo cáo vi phạm</h3>
             <div class="flex flex-col gap-3">
-                <button onclick="submitReport('Thông tin sai')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition">1. Thông tin sai</button>
-                <button onclick="submitReport('Không liên hệ được')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition">2. Không liên hệ được</button>
-                <button onclick="submitReport('Lừa đảo')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition">3. Lừa đảo</button>
+                <button onclick="submitReport('Thông tin sai')" class="w-full text-left px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-semibold hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all">1. Thông tin sai</button>
+                <button onclick="submitReport('Không liên hệ được')" class="w-full text-left px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-semibold hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all">2. Không liên hệ được</button>
+                <button onclick="submitReport('Lừa đảo')" class="w-full text-left px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all">3. Lừa đảo</button>
             </div>
         </div>
     </div>
@@ -108,7 +119,7 @@
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // URL Firebase gốc CHÍNH XÁC của bạn
+        // URL Firebase gốc CHÍNH XÁC
         const firebaseConfig = {
             apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
             authDomain: "vieclamtudo-7a146.firebaseapp.com",
@@ -159,13 +170,14 @@
             const jobContainer = document.getElementById('jobTagsContainer');
             const provContainer = document.getElementById('provinceTagsContainer');
             
-            let jobHtml = `<button onclick="setJob('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border transition-all ${currentJob === '' ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:text-blue-600'}">Tất cả</button>`;
-            allJobs.forEach(j => { jobHtml += `<button onclick="setJob('${j.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border transition-all ${currentJob === j.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:text-blue-600'}">${j.name}</button>`; });
-            jobContainer.innerHTML = `<span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Ngành:</span>` + jobHtml;
+            // Xanh nhạt cho thẻ thường, Xanh đậm cho thẻ Active
+            let jobHtml = `<button onclick="setJob('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-bold border transition-all ${currentJob === '' ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200' : 'bg-white text-slate-600 border-blue-200 hover:border-blue-400 hover:text-blue-700'}">Tất cả</button>`;
+            allJobs.forEach(j => { jobHtml += `<button onclick="setJob('${j.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-bold border transition-all ${currentJob === j.id ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200' : 'bg-white text-slate-600 border-blue-200 hover:border-blue-400 hover:text-blue-700'}">${j.name}</button>`; });
+            jobContainer.innerHTML = `<span class="text-xs font-bold text-slate-500 mr-2 shrink-0 w-16">Ngành:</span>` + jobHtml;
 
-            let provHtml = `<button onclick="setProvince('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border transition-all ${currentProvince === '' ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:text-blue-600'}">Tất cả</button>`;
-            allProvinces.forEach(p => { provHtml += `<button onclick="setProvince('${p.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border transition-all ${currentProvince === p.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:text-blue-600'}">${p.name}</button>`; });
-            provContainer.innerHTML = `<span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Khu vực:</span>` + provHtml;
+            let provHtml = `<button onclick="setProvince('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-bold border transition-all ${currentProvince === '' ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200' : 'bg-white text-slate-600 border-blue-200 hover:border-blue-400 hover:text-blue-700'}">Tất cả</button>`;
+            allProvinces.forEach(p => { provHtml += `<button onclick="setProvince('${p.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-bold border transition-all ${currentProvince === p.id ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200' : 'bg-white text-slate-600 border-blue-200 hover:border-blue-400 hover:text-blue-700'}">${p.name}</button>`; });
+            provContainer.innerHTML = `<span class="text-xs font-bold text-slate-500 mr-2 shrink-0 w-16">Khu vực:</span>` + provHtml;
         }
 
         window.filterData = () => {
@@ -175,26 +187,30 @@
         };
 
         function render(data) {
-            document.getElementById('workerGrid').innerHTML = data.map(w => {
+            const grid = document.getElementById('workerGrid');
+            if(data.length === 0) { grid.innerHTML = `<p class="text-slate-500 text-sm col-span-full py-10 text-center">Không tìm thấy kết quả phù hợp.</p>`; return; }
+            
+            grid.innerHTML = data.map(w => {
                 const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
                 return `
-                <div class="group cursor-pointer relative" onclick="openModal('${w.id}')">
-                    <button onclick="event.stopPropagation(); openReportModal('${w.id}')" class="absolute top-2 right-2 z-10 bg-white/90 text-gray-400 hover:text-red-500 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"><i class="fa-solid fa-flag text-xs"></i></button>
+                <div class="group cursor-pointer relative bg-white p-3 rounded-[1.5rem] border border-blue-50 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300" onclick="openModal('${w.id}')">
+                    <button onclick="event.stopPropagation(); openReportModal('${w.id}')" class="absolute top-5 right-5 z-10 bg-white/90 text-slate-400 hover:text-red-600 hover:bg-red-50 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-sm"><i class="fa-solid fa-flag text-xs"></i></button>
                     
-                    <div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden mb-3 relative">
+                    <div class="aspect-[9/16] bg-slate-100 rounded-2xl overflow-hidden mb-3 relative">
                         <img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="object-cover w-full h-full group-hover:scale-105 transition duration-500" loading="lazy">
-                        <div class="absolute bottom-3 left-3 bg-white/95 px-2.5 py-1 rounded-md text-xs font-bold flex items-center gap-1.5 shadow-sm" id="reviewCount-${w.id}">
+                        <div class="absolute bottom-3 left-3 bg-white/95 px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm" id="reviewCount-${w.id}">
                             <i class="fa-solid fa-comment text-blue-600 text-[10px]"></i> 0
                         </div>
                     </div>
 
-                    <h3 class="font-bold text-base text-gray-900 leading-snug truncate">${w.fullname}</h3>
-                    
-                    <div class="mt-2">
-                        <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-[10px] font-bold">
-                            <i class="fa-solid fa-map-location-dot"></i>
-                            ${provinceName}
-                        </span>
+                    <div class="px-1">
+                        <h3 class="font-bold text-base text-slate-900 leading-snug truncate group-hover:text-blue-700 transition-colors">${w.fullname}</h3>
+                        <div class="mt-2">
+                            <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-700 border border-blue-100 rounded-lg text-[10px] font-bold">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                                ${provinceName}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 `;
@@ -209,29 +225,29 @@
         window.openModal = (id) => {
             const w = workers.find(x => x.id === id);
             const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
-            let servicesHtml = (w.services || []).map(s => `<div class="flex justify-between py-3 border-b border-gray-100 last:border-0"><span class="text-sm font-medium text-gray-800">${s.title}</span><div class="text-right"><span class="text-sm font-bold text-blue-600">${Number(s.price).toLocaleString()}đ</span><span class="text-xs text-gray-500 ml-1">/ ${s.unit || 'lần'}</span></div></div>`).join('') || '<p class="text-sm text-gray-500 italic">Chưa cập nhật bảng giá.</p>';
+            let servicesHtml = (w.services || []).map(s => `<div class="flex justify-between py-3 border-b border-blue-50 last:border-0"><span class="text-sm font-medium text-slate-700">${s.title}</span><div class="text-right"><span class="text-sm font-bold text-blue-600">${Number(s.price).toLocaleString()}đ</span><span class="text-xs text-slate-400 ml-1">/ ${s.unit || 'lần'}</span></div></div>`).join('') || '<p class="text-sm text-slate-400 italic">Chưa cập nhật bảng giá.</p>';
             
             document.getElementById('modalBody').innerHTML = `
                 <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
-                    <div class="w-full md:w-[40%] flex-shrink-0"><div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden sticky top-0 shadow-inner"><img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="w-full h-full object-cover"></div></div>
+                    <div class="w-full md:w-[40%] flex-shrink-0"><div class="aspect-[9/16] bg-slate-100 rounded-2xl overflow-hidden sticky top-0 shadow-inner"><img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="w-full h-full object-cover"></div></div>
                     <div class="w-full md:w-[60%] flex flex-col pb-4">
                         <div class="mb-6">
-                            <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">${w.fullname}</h2>
+                            <h2 class="text-3xl lg:text-4xl font-black text-blue-900 tracking-tight">${w.fullname}</h2>
                             <div class="mt-3 flex items-center gap-2">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-lg text-sm font-bold">
                                     <i class="fa-solid fa-map-location-dot"></i> ${provinceName}
                                 </span>
-                                <span class="text-sm text-gray-500 font-medium">${w.last_location || ''}</span>
+                                <span class="text-sm text-slate-500 font-medium">${w.last_location || ''}</span>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50 p-5 rounded-2xl mb-8"><div><p class="text-xs font-semibold text-gray-500 uppercase">Năm sinh</p><p class="text-base font-bold text-gray-900 mt-1">${w.birth || '--'}</p></div><div><p class="text-xs font-semibold text-gray-500 uppercase">Giới tính</p><p class="text-base font-bold text-gray-900 mt-1">${w.gender || '--'}</p></div><div><p class="text-xs font-semibold text-gray-500 uppercase">Chiều cao</p><p class="text-base font-bold text-gray-900 mt-1">${w.height || '--'}</p></div><div><p class="text-xs font-semibold text-gray-500 uppercase">Cân nặng</p><p class="text-base font-bold text-gray-900 mt-1">${w.weight || '--'}</p></div></div>
-                        <div class="space-y-6 mb-8"><div><h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider border-b border-gray-200 pb-2 mb-3">Kinh nghiệm & Kỹ năng</h3><p class="text-sm text-gray-600 leading-relaxed">${w.exp || 'Chưa có thông tin mô tả.'}</p></div><div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white border border-gray-200 p-5 rounded-2xl"><div><h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Thời gian làm việc</h3><p class="text-sm font-semibold text-gray-900">${w.working_time || 'Thỏa thuận'}</p></div><div class="mt-4 sm:mt-0 sm:text-right border-t sm:border-t-0 sm:border-l border-gray-200 pt-4 sm:pt-0 sm:pl-5"><h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Thù lao mong muốn</h3><p class="text-xl font-bold text-blue-600">${w.expected_salary || 'Thỏa thuận'}</p></div></div></div>
-                        <div class="mb-8"><h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider border-b border-gray-200 pb-2 mb-3">Menu Dịch Vụ</h3><div class="bg-gray-50 p-4 rounded-2xl">${servicesHtml}</div></div>
-                        <div class="mt-auto mb-8"><a href="https://zalo.me/${w.phone}" target="_blank" class="w-full bg-blue-600 text-white py-4 rounded-xl text-center text-sm font-bold hover:bg-blue-700 hover:shadow-lg transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-comment-dots"></i> Liên hệ Zalo / Trao đổi</a></div>
-                        <div class="border-t border-gray-100 pt-6">
-                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Nhận xét từ khách hàng</h3>
-                            <div id="reviewList-${id}" class="space-y-3 mb-4 max-h-48 overflow-y-auto custom-scroll pr-2"><p class="text-xs text-gray-400 italic">Đang tải...</p></div>
-                            <div class="flex gap-2 items-center bg-gray-50 p-2 rounded-xl border border-gray-200"><input type="text" id="reviewInput-${id}" placeholder="Chia sẻ trải nghiệm của bạn..." class="flex-1 bg-transparent border-none text-sm px-3 focus:outline-none focus:ring-0 text-gray-800"><button onclick="submitReview('${id}')" class="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">Gửi</button></div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-50 p-5 rounded-2xl mb-8 border border-slate-100"><div><p class="text-xs font-bold text-slate-400 uppercase">Năm sinh</p><p class="text-base font-bold text-slate-800 mt-1">${w.birth || '--'}</p></div><div><p class="text-xs font-bold text-slate-400 uppercase">Giới tính</p><p class="text-base font-bold text-slate-800 mt-1">${w.gender || '--'}</p></div><div><p class="text-xs font-bold text-slate-400 uppercase">Chiều cao</p><p class="text-base font-bold text-slate-800 mt-1">${w.height || '--'}</p></div><div><p class="text-xs font-bold text-slate-400 uppercase">Cân nặng</p><p class="text-base font-bold text-slate-800 mt-1">${w.weight || '--'}</p></div></div>
+                        <div class="space-y-6 mb-8"><div><h3 class="text-sm font-black text-blue-900 uppercase tracking-wider border-b-2 border-blue-100 pb-2 mb-3">Kinh nghiệm & Kỹ năng</h3><p class="text-sm text-slate-600 leading-relaxed">${w.exp || 'Chưa có thông tin mô tả.'}</p></div><div class="flex flex-col sm:flex-row sm:items-center justify-between bg-blue-50/50 border border-blue-100 p-5 rounded-2xl"><div><h3 class="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-1">Thời gian làm việc</h3><p class="text-sm font-bold text-slate-800">${w.working_time || 'Thỏa thuận'}</p></div><div class="mt-4 sm:mt-0 sm:text-right border-t sm:border-t-0 sm:border-l border-blue-200 pt-4 sm:pt-0 sm:pl-5"><h3 class="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-1">Thù lao mong muốn</h3><p class="text-xl font-black text-blue-600">${w.expected_salary || 'Thỏa thuận'}</p></div></div></div>
+                        <div class="mb-8"><h3 class="text-sm font-black text-blue-900 uppercase tracking-wider border-b-2 border-blue-100 pb-2 mb-3">Menu Dịch Vụ</h3><div class="bg-white border border-blue-50 p-4 rounded-2xl shadow-sm">${servicesHtml}</div></div>
+                        <div class="mt-auto mb-8"><a href="https://zalo.me/${w.phone}" target="_blank" class="w-full bg-blue-600 text-white py-4 rounded-xl text-center text-sm font-bold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-comment-dots"></i> Liên hệ Zalo / Trao đổi</a></div>
+                        <div class="border-t-2 border-blue-50 pt-6">
+                            <h3 class="text-sm font-black text-blue-900 uppercase tracking-wider mb-4">Nhận xét từ khách hàng</h3>
+                            <div id="reviewList-${id}" class="space-y-3 mb-4 max-h-48 overflow-y-auto custom-scroll pr-2"><p class="text-xs text-slate-400 italic">Đang tải...</p></div>
+                            <div class="flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-200"><input type="text" id="reviewInput-${id}" placeholder="Chia sẻ trải nghiệm của bạn..." class="flex-1 bg-transparent border-none text-sm px-3 focus:outline-none focus:ring-0 text-slate-800"><button onclick="submitReview('${id}')" class="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-blue-700 transition">Gửi</button></div>
                         </div>
                     </div>
                 </div>
@@ -240,9 +256,9 @@
             onValue(ref(rtdb, 'reviews/' + id), (s) => { 
                 const listEl = document.getElementById(`reviewList-${id}`);
                 if (listEl && s.val()) {
-                    listEl.innerHTML = Object.values(s.val()).reverse().map(r => `<div class="bg-white p-3.5 rounded-xl border border-gray-100 shadow-sm"><p class="text-sm text-gray-800">${r.text}</p><p class="text-[10px] font-semibold text-gray-400 mt-1.5">${new Date(r.timestamp).toLocaleString('vi-VN')}</p></div>`).join(''); 
+                    listEl.innerHTML = Object.values(s.val()).reverse().map(r => `<div class="bg-white p-3.5 rounded-xl border border-blue-50 shadow-sm"><p class="text-sm text-slate-700 font-medium">${r.text}</p><p class="text-[10px] font-bold text-blue-400 mt-1.5">${new Date(r.timestamp).toLocaleString('vi-VN')}</p></div>`).join(''); 
                 } else if (listEl) {
-                    listEl.innerHTML = `<p class="text-xs text-gray-400 italic">Chưa có nhận xét nào.</p>`;
+                    listEl.innerHTML = `<p class="text-xs text-slate-400 italic">Chưa có nhận xét nào.</p>`;
                 }
             });
         };
