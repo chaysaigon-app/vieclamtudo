@@ -2,19 +2,19 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Nạp Dữ Liệu Đợt 5 - Hoàn Tất 100 Nghề</title>
+    <title>Nạp Tỉnh Thành Đợt 1 - Việc Làm Tự Do</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 p-10 font-sans">
-    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-red-100">
-        <h2 class="text-xl font-black text-red-700 mb-6 uppercase">Nạp Dữ Liệu Đợt 5 (Nghề 81 - 100)</h2>
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-indigo-100">
+        <h2 class="text-xl font-black text-indigo-700 mb-6 uppercase text-center">Nạp Địa Phương - Đợt 1 (20 Tỉnh)</h2>
         
         <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-64 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
-            > Chờ nhấn nút để hoàn tất 100 nghề...
+            > Chờ lệnh nạp 20 tỉnh đầu tiên...
         </div>
 
-        <button onclick="runSetupDot5()" id="btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
-             BẮT ĐẦU NẠP ĐỢT CUỐI
+        <button onclick="runProvinceDot1()" id="btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
+             BẮT ĐẦU NẠP 20 TỈNH ĐẦU TIÊN
         </button>
     </div>
 
@@ -34,45 +34,32 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DANH SÁCH 20 NGHỀ CUỐI CÙNG (ĐỢT 5 - NÔNG NGHIỆP, THỦ CÔNG & CÔNG NGHIỆP)
-        const jobsDot5 = [
-            {id: 'thiet-ke-san-vuon', name: 'Thiết kế sân vườn/Tiểu cảnh'},
-            {id: 'lap-he-thong-tuoi', name: 'Lắp hệ thống tưới tự động'},
-            {id: 'cat-co-phat-hoang', name: 'Cắt cỏ/Phát hoang mặt bằng'},
-            {id: 'uon-cay-kieng', name: 'Nghệ nhân uốn cây kiểng/Bonsai'},
-            {id: 'nuoi-trong-thuy-san', name: 'Tư vấn nuôi trồng thủy sản'},
-            {id: 'sua-may-nong-nghiep', name: 'Sửa máy cày/Máy cắt lúa'},
-            {id: 'dan-lat-thu-cong', name: 'Đan lát/Thủ công mỹ nghệ'},
-            {id: 'cham-khac-go', name: 'Thợ chạm khắc gỗ/Đồ mỹ nghệ'},
-            {id: 'duc-tuong-da', name: 'Thợ đúc tượng/Điêu khắc đá'},
-            {id: 'lam-banh-truyen-thong', name: 'Làm bánh truyền thống theo yêu cầu'},
-            {id: 'rang-xay-cafe', name: 'Rang xay cà phê thủ công'},
-            {id: 'uop-tra-thao-moc', name: 'Ướp trà/Thảo mộc gia truyền'},
-            {id: 'sua-thiet-bi-may', name: 'Sửa máy may công nghiệp'},
-            {id: 'bao-tri-thang-may', name: 'Bảo trì thang máy gia đình'},
-            {id: 've-sinh-ong-khoi', name: 'Vệ sinh ống khói/Hệ thống bếp'},
-            {id: 'lap-cach-am', name: 'Thi công cách âm/Phòng hát'},
-            {id: 'sua-can-dien-tu', name: 'Sửa cân điện tử/Thiết bị đo'},
-            {id: 'thue-do-bao-ho', name: 'Cho thuê đồ bảo hộ/Thiết bị xây dựng'},
-            {id: 'dao-gieng-khoan', name: 'Thợ đào giếng/Khoan giếng'},
-            {id: 'xe-om-cong-nghe-tu-do', name: 'Tài xế chở khách đường dài'}
+        // DANH SÁCH 20 TỈNH ĐẦU TIÊN
+        const provincesDot1 = [
+            {id: 'ag', name: 'An Giang'}, {id: 'vt', name: 'Bà Rịa - Vũng Tàu'}, {id: 'bg', name: 'Bắc Giang'}, 
+            {id: 'bk', name: 'Bắc Kạn'}, {id: 'bl', name: 'Bạc Liêu'}, {id: 'bn', name: 'Bắc Ninh'}, 
+            {id: 'bt', name: 'Bến Tre'}, {id: 'bd', name: 'Bình Định'}, {id: 'bi', name: 'Bình Dương'}, 
+            {id: 'bp', name: 'Bình Phước'}, {id: 'bh', name: 'Bình Thuận'}, {id: 'cm', name: 'Cà Mau'}, 
+            {id: 'ct', name: 'Cần Thơ'}, {id: 'cb', name: 'Cao Bằng'}, {id: 'da', name: 'Đà Nẵng'}, 
+            {id: 'dl', name: 'Đắk Lắk'}, {id: 'no', name: 'Đắk Nông'}, {id: 'db', name: 'Điện Biên'}, 
+            {id: 'na', name: 'Đồng Nai'}, {id: 'dt', name: 'Đồng Tháp'}
         ];
 
-        window.runSetupDot5 = async () => {
+        window.runProvinceDot1 = async () => {
             const log = document.getElementById('log');
             const btn = document.getElementById('btn');
             btn.disabled = true;
-            log.innerHTML += `<p>> Đang nạp đợt cuối (Nông nghiệp & Thủ công)...</p>`;
+            log.innerHTML += `<p>> Đang nạp 20 địa phương đầu tiên...</p>`;
 
             try {
-                for (let j of jobsDot5) {
-                    await setDoc(doc(db, "jobs", j.id), j);
-                    log.innerHTML += `<p>> Đã nạp: ${j.name}</p>`;
+                for (let p of provincesDot1) {
+                    await setDoc(doc(db, "provinces", p.id), p);
+                    log.innerHTML += `<p>> Đã nạp: ${p.name}</p>`;
                     log.scrollTop = log.scrollHeight;
                 }
 
-                log.innerHTML += `<p class="text-blue-400 font-bold">> CHÚC MỪNG! ĐÃ HOÀN TẤT 100 NGÀNH NGHỀ.</p>`;
-                btn.innerText = "HOÀN TẤT 100 NGHỀ";
+                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT ĐỢT 1 (20 TỈNH)!</p>`;
+                btn.innerText = "XONG ĐỢT 1";
             } catch (error) {
                 log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
                 btn.disabled = false;
