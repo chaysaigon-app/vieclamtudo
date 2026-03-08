@@ -32,7 +32,7 @@
         <div class="mb-10">
             <div class="mb-8">
                 <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-4">Tìm là thấy, tin là dùng!</h2>
-                <p class="text-sm md:text-base text-gray-600 font-medium leading-relaxed max-w-4xl">Bất kể bạn cần gì, chúng tôi đều có đối tác sẵn sàng! 🛠️🧹💆‍♂️ Từ những hỏng hóc nhỏ trong nhà đến nhu cầu thư giãn, tập luyện chuyên nghiệp. Không còn nỗi lo tìm thợ khó hay giá cả không minh bạch. Khám phá ngay hôm nay!</p>
+                <p class="text-sm md:text-base text-gray-600 font-medium leading-relaxed max-w-4xl">Bất kể bạn cần gì, chúng tôi đều có đối tác sẵn sàng! 🛠️🧹💆‍♂️ Từ những hỏng hóc nhỏ trong nhà đến nhu cầu làm đẹp, học nghề, gia sư, tập luyện chuyên nghiệp. Giá cả công khai & Dịch vụ chu đáo. Khám phá ngay hôm nay!</p>
             </div>
             
             <div class="flex flex-col md:flex-row gap-3 mb-5">
@@ -159,7 +159,6 @@
             const jobContainer = document.getElementById('jobTagsContainer');
             const provContainer = document.getElementById('provinceTagsContainer');
             
-            // Đã đổi màu Active sang Xanh Blue-600
             let jobHtml = `<button onclick="setJob('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border transition-all ${currentJob === '' ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:text-blue-600'}">Tất cả</button>`;
             allJobs.forEach(j => { jobHtml += `<button onclick="setJob('${j.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border transition-all ${currentJob === j.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:text-blue-600'}">${j.name}</button>`; });
             jobContainer.innerHTML = `<span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Ngành:</span>` + jobHtml;
