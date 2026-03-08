@@ -2,19 +2,19 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Nạp Dữ Liệu Đợt 3 - Việc Làm Tự Do</title>
+    <title>Nạp Dữ Liệu Đợt 4 - Việc Làm Tự Do</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 p-10 font-sans">
-    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-orange-100">
-        <h2 class="text-xl font-black text-orange-700 mb-6 uppercase">Nạp Dữ Liệu Đợt 3 (Nghề 41 - 60)</h2>
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-purple-100">
+        <h2 class="text-xl font-black text-purple-700 mb-6 uppercase">Nạp Dữ Liệu Đợt 4 (Nghề 61 - 80)</h2>
         
         <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-64 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
-            > Chờ nhấn nút để nạp đợt 3...
+            > Chờ nhấn nút để nạp đợt 4...
         </div>
 
-        <button onclick="runSetupDot3()" id="btn" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
-             BẮT ĐẦU NẠP ĐỢT 3
+        <button onclick="runSetupDot4()" id="btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
+             BẮT ĐẦU NẠP ĐỢT 4
         </button>
     </div>
 
@@ -34,45 +34,45 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DANH SÁCH 20 NGHỀ TIẾP THEO (ĐỢT 3 - NHÓM KỸ THUẬT & CÔNG NGHỆ)
-        const jobsDot3 = [
-            {id: 'sua-dien-thoai', name: 'Sửa điện thoại tận nơi'},
-            {id: 'cai-phan-mem', name: 'Cài đặt phần mềm máy tính'},
-            {id: 'phuc-hoi-du-lieu', name: 'Phục hồi dữ liệu ổ cứng'},
-            {id: 'lap-mang-wifi', name: 'Lắp đặt/Sửa Wifi'},
-            {id: 'sua-may-in', name: 'Sửa máy in/Bơm mực'},
-            {id: 've-sinh-may-giat', name: 'Vệ sinh máy giặt'},
-            {id: 'sua-lo-vi-song', name: 'Sửa lò vi sóng'},
-            {id: 'sua-may-loc-nuoc', name: 'Sửa máy lọc nước'},
-            {id: 'lap-gian-phoi', name: 'Lắp giàn phơi thông minh'},
-            {id: 'chong-tham', name: 'Chống thấm tường/Trần'},
-            {id: 'thay-kinh', name: 'Thay kính cửa/Bể cá'},
-            {id: 'sua-xe-dien', name: 'Sửa xe đạp/máy điện'},
-            {id: 'trang-tri-tet', name: 'Trang trí Tết/Lễ'},
-            {id: 'cham-me-be', name: 'Chăm sóc mẹ và bé'},
-            {id: 'lay-cao-rang', name: 'Lấy cao răng tại nhà'},
-            {id: 'tiem-thu-cung', name: 'Tiêm phòng thú cưng'},
-            {id: 'don-kho', name: 'Dọn dẹp kho bãi'},
-            {id: 'smarthome', name: 'Lắp đặt nhà thông minh'},
-            {id: 'sua-cua-cuon', name: 'Sửa cửa cuốn'},
-            {id: 'do-dac', name: 'Đo đạc địa chính'}
+        // DANH SÁCH 20 NGHỀ TIẾP THEO (ĐỢT 4 - VĂN PHÒNG & SÁNG TẠO)
+        const jobsDot4 = [
+            {id: 'thiet-ke-menu', name: 'Thiết kế Menu/Bảng hiệu'},
+            {id: 'viet-bai-content', name: 'Viết bài/Nội dung thuê'},
+            {id: 'nhap-lieu-pc', name: 'Nhập liệu máy tính'},
+            {id: 'dich-thuat-tu-do', name: 'Dịch thuật tài liệu'},
+            {id: 'video-editor', name: 'Cắt ghép/Chỉnh video'},
+            {id: 'admin-fanpage', name: 'Quản trị Fanpage/Zalo'},
+            {id: 'ads-optimization', name: 'Chạy quảng cáo giá rẻ'},
+            {id: 'ai-artist', name: 'Tạo hình ảnh bằng AI'},
+            {id: 'phat-to-roi-thue', name: 'Phát tờ rơi/Quảng cáo'},
+            {id: 'treo-banner', name: 'Treo băng rôn/Banner'},
+            {id: 'pg-pb-event', name: 'Cung cấp PG/PB sự kiện'},
+            {id: 'mc-event', name: 'MC dẫn chương trình'},
+            {id: 'nhac-cong-party', name: 'Nhạc công đám tiệc'},
+            {id: 'thue-xe-lai', name: 'Cho thuê xe tự lái'},
+            {id: 'google-map-review', name: 'Tăng đánh giá Google Map'},
+            {id: 'telesale-thue', name: 'Gọi điện bán hàng thuê'},
+            {id: 'ke-toan-thue', name: 'Làm sổ sách kế toán'},
+            {id: 'tu-van-luat', name: 'Tư vấn pháp lý tự do'},
+            {id: 'sale-freelancer', name: 'Nhân viên bán hàng thuê'},
+            {id: 'giu-xe-event', name: 'Bảo vệ/Giữ xe sự kiện'}
         ];
 
-        window.runSetupDot3 = async () => {
+        window.runSetupDot4 = async () => {
             const log = document.getElementById('log');
             const btn = document.getElementById('btn');
             btn.disabled = true;
-            log.innerHTML += `<p>> Đang nạp đợt 3 (Công nghệ & Kỹ thuật)...</p>`;
+            log.innerHTML += `<p>> Đang nạp đợt 4 (Văn phòng & Sáng tạo)...</p>`;
 
             try {
-                for (let j of jobsDot3) {
+                for (let j of jobsDot4) {
                     await setDoc(doc(db, "jobs", j.id), j);
                     log.innerHTML += `<p>> Đã nạp: ${j.name}</p>`;
                     log.scrollTop = log.scrollHeight;
                 }
 
-                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT ĐỢT 3 (60/100 NGHỀ)!</p>`;
-                btn.innerText = "XONG ĐỢT 3";
+                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT ĐỢT 4 (80/100 NGHỀ)!</p>`;
+                btn.innerText = "XONG ĐỢT 4";
             } catch (error) {
                 log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
                 btn.disabled = false;
