@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
@@ -31,7 +31,11 @@
     <main class="max-w-7xl mx-auto px-5 py-10">
         
         <div class="mb-10">
-            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-6">Khám phá đối tác tự do</h2>
+            
+            <div class="mb-8">
+                <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-4">Tìm là thấy, tin là dùng!</h2>
+                <p class="text-sm md:text-base text-gray-900 font-medium leading-relaxed max-w-4xl">Bất kể bạn cần gì, chúng tôi đều có đối tác sẵn sàng! 🛠️🧹💆‍♂️ Từ những hỏng hóc nhỏ trong nhà đến nhu cầu thư giãn, tập luyện chuyên nghiệp. Không còn nỗi lo tìm thợ khó hay giá cả không minh bạch. Khám phá ngay hôm nay!</p>
+            </div>
             
             <div class="flex flex-col md:flex-row gap-3 mb-5">
                 <div class="relative flex-1">
@@ -52,11 +56,11 @@
                 
                 <div class="flex items-center gap-2 overflow-x-auto hide-scroll pb-3 border-b border-gray-50 mb-3" id="jobTagsContainer">
                     <span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Ngành:</span>
-                    </div>
+                </div>
 
                 <div class="flex items-center gap-2 overflow-x-auto hide-scroll" id="provinceTagsContainer">
                     <span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Khu vực:</span>
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -110,7 +114,6 @@
         let allJobs = [];
         let allProvinces = [];
         
-        // Trạng thái bộ lọc
         let currentJob = "";
         let currentProvince = "";
         let currentReportId = null;
@@ -126,7 +129,6 @@
             allProvinces = provsSnap.docs.map(d => ({id: d.id, ...d.data()}));
             workers = workersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
             
-            // Đổ dữ liệu vào Dropdown
             allJobs.forEach(j => document.getElementById('jobSelect').innerHTML += `<option value="${j.id}">${j.name}</option>`);
             allProvinces.forEach(p => document.getElementById('provinceSelect').innerHTML += `<option value="${p.id}">${p.name}</option>`);
 
@@ -134,7 +136,6 @@
             render(workers);
         }
 
-        // HÀM ĐỒNG BỘ: KHI CHỌN TỪ DROPDOWN -> CẬP NHẬT TAGS
         window.handleDropdownChange = (type) => {
             if (type === 'job') {
                 currentJob = document.getElementById('jobSelect').value;
@@ -145,7 +146,6 @@
             filterData();
         };
 
-        // HÀM ĐỒNG BỘ: KHI BẤM TAG -> CẬP NHẬT DROPDOWN & TAGS
         window.setJob = (id) => {
             currentJob = id;
             document.getElementById('jobSelect').value = id;
@@ -160,39 +160,28 @@
             filterData();
         };
 
-        // RENDER GIAO DIỆN THẺ (TAGS)
         function renderTags() {
             const jobContainer = document.getElementById('jobTagsContainer');
             const provContainer = document.getElementById('provinceTagsContainer');
 
-            // Render Thẻ Ngành Nghề (Màu Blue)
-            let jobHtml = `<button onclick="setJob('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentJob === '' ? 'bg-blue-50 text-blue-700 border-blue-300 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-200 hover:text-blue-600'}">Tất cả</button>`;
-            allJobs.forEach(j => {
-                jobHtml += `<button onclick="setJob('${j.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentJob === j.id ? 'bg-blue-50 text-blue-700 border-blue-300 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-blue-200 hover:text-blue-600'}">${j.name}</button>`;
-            });
+            let jobHtml = `<button onclick="setJob('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentJob === '' ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">Tất cả</button>`;
+            allJobs.forEach(j => { jobHtml += `<button onclick="setJob('${j.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentJob === j.id ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">${j.name}</button>`; });
             jobContainer.innerHTML = `<span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Ngành:</span>` + jobHtml;
 
-            // Render Thẻ Tỉnh Thành (Màu Emerald)
-            let provHtml = `<button onclick="setProvince('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentProvince === '' ? 'bg-emerald-50 text-emerald-700 border-emerald-300 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-emerald-200 hover:text-emerald-600'}">Tất cả</button>`;
-            allProvinces.forEach(p => {
-                provHtml += `<button onclick="setProvince('${p.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentProvince === p.id ? 'bg-emerald-50 text-emerald-700 border-emerald-300 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-emerald-200 hover:text-emerald-600'}">${p.name}</button>`;
-            });
+            let provHtml = `<button onclick="setProvince('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentProvince === '' ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">Tất cả</button>`;
+            allProvinces.forEach(p => { provHtml += `<button onclick="setProvince('${p.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentProvince === p.id ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">${p.name}</button>`; });
             provContainer.innerHTML = `<span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Khu vực:</span>` + provHtml;
         }
 
-        // LỌC VÀ HIỂN THỊ DỮ LIỆU
         window.filterData = () => {
             const s = document.getElementById('searchInput').value.toLowerCase();
             const filtered = workers.filter(w => {
                 const searchTxt = (w.fullname + (w.exp || '')).toLowerCase();
-                return searchTxt.includes(s) && 
-                       (currentJob ? w.job_id === currentJob : true) && 
-                       (currentProvince ? w.province_id === currentProvince : true);
+                return searchTxt.includes(s) && (currentJob ? w.job_id === currentJob : true) && (currentProvince ? w.province_id === currentProvince : true);
             });
             render(filtered);
         };
 
-        // RENDER LƯỚI NHÂN SỰ VÀ MODAL (GIỮ NGUYÊN)
         function render(data) {
             const grid = document.getElementById('workerGrid');
             if(data.length === 0) { grid.innerHTML = `<p class="text-gray-500 text-sm col-span-full py-10 text-center">Không tìm thấy kết quả phù hợp.</p>`; return; }
