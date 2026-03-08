@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Khởi tạo dữ liệu Hệ thống</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 p-10 font-sans">
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
+        <h2 class="text-xl font-bold text-blue-800 mb-6">NẠP DỮ LIỆU LÊN FIREBASE</h2>
+        
+        <div id="log" class="text-xs bg-black text-green-400 p-4 rounded-lg h-48 overflow-y-auto mb-6 font-mono">
+            > Chờ nhấn nút nạp dữ liệu...
+        </div>
+
+        <button onclick="runSetup()" id="btn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition">
+            BẮT ĐẦU NẠP DỮ LIỆU
+        </button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Cấu hình Firebase dự án của bạn
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
+            authDomain: "vieclamtudo-7a146.firebaseapp.com",
+            projectId: "vieclamtudo-7a146",
+            storageBucket: "vieclamtudo-7a146.firebasestorage.app",
+            messagingSenderId: "659703475018",
+            appId: "1:659703475018:web:f1343a8e32cc030a092fb3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.runSetup = async () => {
+            const log = document.getElementById('log');
+            const btn = document.getElementById('btn');
+            btn.disabled = true;
+            log.innerHTML += `<p>> Đang kết nối Firebase...</p>`;
+
+            try {
+                // 1. TỈNH THÀNH (Dữ liệu Tỉnh)
+                const provinces = [
+                    { id: 'hcm', name: 'TP. Hồ Chí Minh' },
+                    { id: 'hn', name: 'Hà Nội' },
+                    { id: 'dn', name: 'Đà Nẵng' }
+                ];
+                for (let p of provinces) {
+                    await setDoc(doc(db, "provinces", p.id), p);
+                    log.innerHTML += `<p>> Đã nạp tỉnh: ${p.name}</p>`;
+                }
+
+                // 2. NGÀNH NGHỀ (Dữ liệu Nghề)
+                const jobs = [
+                    { id: 'dien-nuoc', name: 'Sửa điện nước' },
+                    { id: 'don-dep', name: 'Dọn dẹp nhà' }
+                ];
+                for (let j of jobs) {
+                    await setDoc(doc(db, "jobs", j.id), j);
+                    log.innerHTML += `<p>> Đã nạp nghề: ${j.name}</p>`;
+                }
+
+                // 3. NGƯỜI LAO ĐỘNG (Hồ sơ & Menu dịch vụ)
+                const worker = {
+                    fullname: "Nguyễn Văn Nam",
+                    phone: "0909108890",
+                    city_id: "hcm",
+                    job_id: "dien-nuoc",
+                    birth: 1990,
+                    health: "Tốt",
+                    exp: "10 năm",
+                    // ĐÂY LÀ PHẦN MENU GIÁ CỦA NGƯỜI ĐÓ
+                    services: [
+                        { title: "Sửa vòi nước rò rỉ", price: 80000, unit: "lần" },
+                        { title: "Lắp máy bơm tăng áp", price: 250000, unit: "cái" }
+                    ]
+                };
+                await addDoc(collection(db, "workers"), worker);
+                log.innerHTML += `<p>> Đã tạo hồ sơ & menu cho thợ: Nam</p>`;
+
+                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT THÀNH CÔNG!</p>`;
+                btn.innerText = "NẠP XONG";
+            } catch (error) {
+                log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
