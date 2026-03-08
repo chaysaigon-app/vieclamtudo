@@ -2,19 +2,19 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Cập Nhật Chi Tiết Nhân Sự - Việc Làm Tự Do</title>
+    <title>Cập Nhật Hồ Sơ Lao Động - Việc Làm Tự Do</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 p-10 font-sans">
-    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
-        <h2 class="text-xl font-black text-blue-800 mb-6 uppercase text-center">Cập Nhật Thể Hình & Địa Điểm</h2>
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-green-100">
+        <h2 class="text-xl font-black text-green-800 mb-6 uppercase text-center">Nạp Nhân Sự: Thời gian & Thù lao</h2>
         
         <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-64 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
-            > Chờ nạp hồ sơ nhân sự đầy đủ thông tin...
+            > Chờ lệnh nạp hồ sơ đầy đủ thông số...
         </div>
 
-        <button onclick="runWorkerUpdate()" id="btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
-             BẮT ĐẦU CẬP NHẬT NHÂN SỰ
+        <button onclick="runAdvancedWorkerSetup()" id="btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
+             NẠP NHÂN SỰ ĐẦY ĐỦ THÔNG TIN
         </button>
     </div>
 
@@ -34,38 +34,42 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.runWorkerUpdate = async () => {
+        window.runAdvancedWorkerSetup = async () => {
             const log = document.getElementById('log');
             const btn = document.getElementById('btn');
             btn.disabled = true;
-            log.innerHTML += `<p>> Đang nạp nhân sự mẫu đầy đủ thông tin thể hình...</p>`;
+            log.innerHTML += `<p>> Đang nạp nhân sự mẫu có Thời gian & Thù lao...</p>`;
 
             try {
-                // HỒ SƠ NHÂN SỰ ĐẦY ĐỦ CÁC TRƯỜNG MỚI
                 const worker = {
-                    fullname: "Trần Anh Quân",
-                    gender: "Nam",              // Giới tính
-                    height: "175cm",            // Chiều cao
-                    weight: "70kg",             // Cân nặng
-                    phone: "0909108890",
-                    birth: 1992,
-                    health: "Tốt",
-                    family: "Ổn định",
-                    job_id: "sua-lanh",
+                    fullname: "Lê Văn Tám",
+                    gender: "Nam",
+                    height: "170cm",
+                    weight: "65kg",
+                    phone: "0912345678",
+                    birth: 1988,
+                    job_id: "dien-nuoc",
                     province_id: "hc",
-                    last_location: "Quận 1, TP. HCM", // Địa điểm làm việc gần nhất
-                    exp: "12 năm",
+                    last_location: "Quận Bình Thạnh, TP. HCM",
+                    
+                    // --- THÔNG TIN MỚI BỔ SUNG ---
+                    working_time: "Toàn thời gian (Rảnh 8h - 20h, cả T7/CN)", 
+                    expected_salary: "500,000đ - 800,000đ / ngày",
+                    
+                    exp: "15 năm kinh nghiệm",
+                    health: "Tốt, không bệnh nền",
                     services: [
-                        { title: "Vệ sinh máy lạnh", price: 200000, unit: "bộ" },
-                        { title: "Sửa board mạch", price: 450000, unit: "lần" }
+                        { title: "Sửa chập điện", price: 300000, unit: "lần" },
+                        { title: "Thay máy bơm", price: 200000, unit: "máy" }
                     ]
                 };
 
                 await addDoc(collection(db, "workers"), worker);
                 
-                log.innerHTML += `<p>> Đã nạp nhân sự: ${worker.fullname}</p>`;
-                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT CẬP NHẬT CẤU TRÚC NHÂN SỰ!</p>`;
-                btn.innerText = "ĐÃ CẬP NHẬT XONG";
+                log.innerHTML += `<p>> Đã nạp: ${worker.fullname}</p>`;
+                log.innerHTML += `<p>> Thù lao: ${worker.expected_salary}</p>`;
+                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT NẠP DỮ LIỆU ĐẦY ĐỦ!</p>`;
+                btn.innerText = "XONG";
             } catch (error) {
                 log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
                 btn.disabled = false;
