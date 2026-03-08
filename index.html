@@ -29,9 +29,7 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-5 py-10">
-        
         <div class="mb-10">
-            
             <div class="mb-8">
                 <h2 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900 mb-4">Tìm là thấy, tin là dùng!</h2>
                 <p class="text-sm md:text-base text-gray-900 font-medium leading-relaxed max-w-4xl">Bất kể bạn cần gì, chúng tôi đều có đối tác sẵn sàng! 🛠️🧹💆‍♂️ Từ những hỏng hóc nhỏ trong nhà đến nhu cầu thư giãn, tập luyện chuyên nghiệp. Không còn nỗi lo tìm thợ khó hay giá cả không minh bạch. Khám phá ngay hôm nay!</p>
@@ -43,30 +41,26 @@
                     <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Tìm kiếm tên, kỹ năng..." 
                            class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition">
                 </div>
-                <select id="jobSelect" onchange="handleDropdownChange('job')" class="py-3 px-4 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 outline-none focus:border-gray-900 transition appearance-none cursor-pointer">
+                <select id="jobSelect" onchange="handleDropdownChange('job')" class="py-3 px-4 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 outline-none appearance-none cursor-pointer">
                     <option value="">Tất cả lĩnh vực</option>
                 </select>
-                <select id="provinceSelect" onchange="handleDropdownChange('province')" class="py-3 px-4 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 outline-none focus:border-gray-900 transition appearance-none cursor-pointer">
+                <select id="provinceSelect" onchange="handleDropdownChange('province')" class="py-3 px-4 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 outline-none appearance-none cursor-pointer">
                     <option value="">Toàn quốc (63 tỉnh thành)</option>
                 </select>
             </div>
 
             <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm">
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Hoặc chọn nhanh:</p>
-                
                 <div class="flex items-center gap-2 overflow-x-auto hide-scroll pb-3 border-b border-gray-50 mb-3" id="jobTagsContainer">
                     <span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Ngành:</span>
                 </div>
-
                 <div class="flex items-center gap-2 overflow-x-auto hide-scroll" id="provinceTagsContainer">
                     <span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Khu vực:</span>
                 </div>
             </div>
         </div>
 
-        <div id="workerGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-10">
-            </div>
-
+        <div id="workerGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-10"></div>
     </main>
 
     <a href="https://zalo.me/0909108890" target="_blank" class="fixed bottom-6 right-6 bg-white border border-gray-200 text-gray-800 w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 hover:scale-105 transition-all z-30">
@@ -85,9 +79,9 @@
             <button onclick="closeReportModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-xl font-bold text-gray-900 mb-5">Báo cáo vi phạm</h3>
             <div class="flex flex-col gap-3">
-                <button onclick="submitReport('Thông tin sai')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition">1. Thông tin sai</button>
-                <button onclick="submitReport('Không liên hệ được')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition">2. Không liên hệ được</button>
-                <button onclick="submitReport('Lừa đảo')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition">3. Lừa đảo</button>
+                <button onclick="submitReport('Thông tin sai')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 transition">1. Thông tin sai</button>
+                <button onclick="submitReport('Không liên hệ được')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 transition">2. Không liên hệ được</button>
+                <button onclick="submitReport('Lừa đảo')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 transition">3. Lừa đảo</button>
             </div>
         </div>
     </div>
@@ -101,6 +95,7 @@
             apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
             authDomain: "vieclamtudo-7a146.firebaseapp.com",
             projectId: "vieclamtudo-7a146",
+            // ĐÃ CẬP NHẬT URL CHÍNH XÁC CỦA BẠN
             databaseURL: "https://vieclamtudo-7a146-default-rtdb.asia-southeast1.firebasedatabase.app",
             storageBucket: "vieclamtudo-7a146.firebasestorage.app",
             appId: "1:659703475018:web:f1343a8e32cc030a092fb3"
@@ -113,7 +108,6 @@
         let workers = [];
         let allJobs = [];
         let allProvinces = [];
-        
         let currentJob = "";
         let currentProvince = "";
         let currentReportId = null;
@@ -124,122 +118,81 @@
                 getDocs(collection(db, "provinces")),
                 getDocs(collection(db, "workers"))
             ]);
-            
             allJobs = jobsSnap.docs.map(d => ({id: d.id, ...d.data()}));
             allProvinces = provsSnap.docs.map(d => ({id: d.id, ...d.data()}));
             workers = workersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-            
             allJobs.forEach(j => document.getElementById('jobSelect').innerHTML += `<option value="${j.id}">${j.name}</option>`);
             allProvinces.forEach(p => document.getElementById('provinceSelect').innerHTML += `<option value="${p.id}">${p.name}</option>`);
-
             renderTags();
             render(workers);
         }
 
         window.handleDropdownChange = (type) => {
-            if (type === 'job') {
-                currentJob = document.getElementById('jobSelect').value;
-            } else {
-                currentProvince = document.getElementById('provinceSelect').value;
-            }
-            renderTags();
-            filterData();
+            if (type === 'job') currentJob = document.getElementById('jobSelect').value;
+            else currentProvince = document.getElementById('provinceSelect').value;
+            renderTags(); filterData();
         };
 
-        window.setJob = (id) => {
-            currentJob = id;
-            document.getElementById('jobSelect').value = id;
-            renderTags();
-            filterData();
-        };
-
-        window.setProvince = (id) => {
-            currentProvince = id;
-            document.getElementById('provinceSelect').value = id;
-            renderTags();
-            filterData();
-        };
+        window.setJob = (id) => { currentJob = id; document.getElementById('jobSelect').value = id; renderTags(); filterData(); };
+        window.setProvince = (id) => { currentProvince = id; document.getElementById('provinceSelect').value = id; renderTags(); filterData(); };
 
         function renderTags() {
             const jobContainer = document.getElementById('jobTagsContainer');
             const provContainer = document.getElementById('provinceTagsContainer');
-
-            let jobHtml = `<button onclick="setJob('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentJob === '' ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">Tất cả</button>`;
-            allJobs.forEach(j => { jobHtml += `<button onclick="setJob('${j.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentJob === j.id ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">${j.name}</button>`; });
+            let jobHtml = `<button onclick="setJob('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border ${currentJob === '' ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200'}">Tất cả</button>`;
+            allJobs.forEach(j => { jobHtml += `<button onclick="setJob('${j.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border ${currentJob === j.id ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200'}">${j.name}</button>`; });
             jobContainer.innerHTML = `<span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Ngành:</span>` + jobHtml;
-
-            let provHtml = `<button onclick="setProvince('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentProvince === '' ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">Tất cả</button>`;
-            allProvinces.forEach(p => { provHtml += `<button onclick="setProvince('${p.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${currentProvince === p.id ? 'bg-gray-900 text-white border-gray-900 shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-900 hover:text-gray-900'}">${p.name}</button>`; });
+            let provHtml = `<button onclick="setProvince('')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border ${currentProvince === '' ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200'}">Tất cả</button>`;
+            allProvinces.forEach(p => { provHtml += `<button onclick="setProvince('${p.id}')" class="shrink-0 px-4 py-2 rounded-full text-xs font-semibold border ${currentProvince === p.id ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200'}">${p.name}</button>`; });
             provContainer.innerHTML = `<span class="text-xs font-semibold text-gray-400 mr-2 shrink-0 w-16">Khu vực:</span>` + provHtml;
         }
 
         window.filterData = () => {
             const s = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = workers.filter(w => {
-                const searchTxt = (w.fullname + (w.exp || '')).toLowerCase();
-                return searchTxt.includes(s) && (currentJob ? w.job_id === currentJob : true) && (currentProvince ? w.province_id === currentProvince : true);
-            });
+            const filtered = workers.filter(w => (w.fullname + (w.exp || '')).toLowerCase().includes(s) && (currentJob ? w.job_id === currentJob : true) && (currentProvince ? w.province_id === currentProvince : true));
             render(filtered);
         };
 
         function render(data) {
-            const grid = document.getElementById('workerGrid');
-            if(data.length === 0) { grid.innerHTML = `<p class="text-gray-500 text-sm col-span-full py-10 text-center">Không tìm thấy kết quả phù hợp.</p>`; return; }
-            grid.innerHTML = data.map(w => `
+            document.getElementById('workerGrid').innerHTML = data.map(w => `
                 <div class="group cursor-pointer relative" onclick="openModal('${w.id}')">
-                    <button onclick="event.stopPropagation(); openReportModal('${w.id}')" title="Báo cáo" class="absolute top-2 right-2 z-10 bg-white/90 backdrop-blur text-gray-400 hover:text-red-500 hover:bg-red-50 w-8 h-8 rounded-full flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-all"><i class="fa-solid fa-flag text-xs"></i></button>
-                    <div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden mb-3 relative"><img src="${w.avatar || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80'}" class="object-cover w-full h-full group-hover:scale-105 transition duration-500" loading="lazy"><div class="absolute bottom-3 left-3 bg-white/95 px-2.5 py-1 rounded-md text-xs font-bold text-gray-900 flex items-center gap-1.5 shadow-sm" id="reviewCount-${w.id}"><i class="fa-solid fa-comment text-gray-900 text-[10px]"></i> 0</div></div>
-                    <h3 class="font-bold text-gray-900 text-base leading-snug">${w.fullname}</h3>
-                    <p class="text-sm font-medium text-gray-500 mt-1 truncate flex items-center gap-1.5"><i class="fa-solid fa-map-location-dot"></i> Phục vụ: ${w.last_location || 'Toàn quốc'}</p>
+                    <button onclick="event.stopPropagation(); openReportModal('${w.id}')" class="absolute top-2 right-2 z-10 bg-white/90 text-gray-400 hover:text-red-500 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"><i class="fa-solid fa-flag text-xs"></i></button>
+                    <div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden mb-3 relative"><img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="object-cover w-full h-full group-hover:scale-105 transition duration-500" loading="lazy"><div class="absolute bottom-3 left-3 bg-white/95 px-2.5 py-1 rounded-md text-xs font-bold flex items-center gap-1.5 shadow-sm" id="reviewCount-${w.id}"><i class="fa-solid fa-comment text-[10px]"></i> 0</div></div>
+                    <h3 class="font-bold text-base leading-snug">${w.fullname}</h3>
+                    <p class="text-sm font-medium text-gray-500 mt-1 truncate"><i class="fa-solid fa-map-location-dot"></i> Phục vụ: ${w.last_location || 'Toàn quốc'}</p>
                 </div>
             `).join('');
-            data.forEach(w => syncReviewCount(w.id));
-        }
-
-        function syncReviewCount(id) {
-            onValue(ref(rtdb, 'reviews/' + id), (s) => {
-                const vals = s.val();
-                if (document.getElementById(`reviewCount-${id}`) && vals) document.getElementById(`reviewCount-${id}`).innerHTML = `<i class="fa-solid fa-comment text-gray-900 text-[10px]"></i> ${Object.keys(vals).length}`;
-            });
+            data.forEach(w => onValue(ref(rtdb, 'reviews/' + w.id), (s) => { if(document.getElementById(`reviewCount-${w.id}`) && s.val()) document.getElementById(`reviewCount-${w.id}`).innerHTML = `<i class="fa-solid fa-comment text-[10px]"></i> ${Object.keys(s.val()).length}`; }));
         }
 
         window.openModal = (id) => {
             const w = workers.find(x => x.id === id);
-            let servicesHtml = '<p class="text-sm text-gray-500 italic">Chưa cập nhật bảng giá.</p>';
-            if (w.services && w.services.length > 0) {
-                servicesHtml = w.services.map(s => `<div class="flex justify-between items-center py-3 border-b border-gray-100 last:border-0"><span class="text-sm font-medium text-gray-800">${s.title}</span><div class="text-right"><span class="text-sm font-bold text-gray-900">${Number(s.price).toLocaleString()}đ</span><span class="text-xs text-gray-500 ml-1">/ ${s.unit || 'lần'}</span></div></div>`).join('');
-            }
+            let servicesHtml = (w.services || []).map(s => `<div class="flex justify-between py-3 border-b border-gray-100"><span>${s.title}</span><span class="font-bold">${Number(s.price).toLocaleString()}đ/${s.unit || 'lần'}</span></div>`).join('') || '<p class="text-gray-400 italic">Chưa cập nhật.</p>';
             document.getElementById('modalBody').innerHTML = `
                 <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
-                    <div class="w-full md:w-[40%] flex-shrink-0"><div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden sticky top-0 shadow-inner"><img src="${w.avatar || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80'}" class="w-full h-full object-cover"></div></div>
-                    <div class="w-full md:w-[60%] flex flex-col pb-4">
-                        <div class="mb-6"><h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">${w.fullname}</h2><div class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg mt-3"><i class="fa-solid fa-map-location-dot text-gray-500"></i><span class="text-sm font-semibold text-gray-700">Khu vực phục vụ: ${w.last_location || 'Toàn quốc'}</span></div></div>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50 p-5 rounded-2xl mb-8"><div><p class="text-xs font-semibold text-gray-500 uppercase">Năm sinh</p><p class="text-base font-bold text-gray-900 mt-1">${w.birth || '--'}</p></div><div><p class="text-xs font-semibold text-gray-500 uppercase">Giới tính</p><p class="text-base font-bold text-gray-900 mt-1">${w.gender || '--'}</p></div><div><p class="text-xs font-semibold text-gray-500 uppercase">Chiều cao</p><p class="text-base font-bold text-gray-900 mt-1">${w.height || '--'}</p></div><div><p class="text-xs font-semibold text-gray-500 uppercase">Cân nặng</p><p class="text-base font-bold text-gray-900 mt-1">${w.weight || '--'}</p></div></div>
-                        <div class="space-y-6 mb-8"><div><h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider border-b border-gray-200 pb-2 mb-3">Kinh nghiệm & Kỹ năng</h3><p class="text-sm text-gray-600 leading-relaxed">${w.exp || 'Chưa có thông tin.'}</p></div><div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white border border-gray-200 p-5 rounded-2xl"><div><h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Thời gian làm việc</h3><p class="text-sm font-semibold text-gray-900">${w.working_time || 'Thỏa thuận'}</p></div><div class="mt-4 sm:mt-0 sm:text-right border-t sm:border-t-0 sm:border-l border-gray-200 pt-4 sm:pt-0 sm:pl-5"><h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Thù lao mong muốn</h3><p class="text-xl font-bold text-gray-900">${w.expected_salary || 'Thỏa thuận'}</p></div></div></div>
-                        <div class="mb-8"><h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider border-b border-gray-200 pb-2 mb-3">Menu Dịch Vụ</h3><div class="bg-gray-50 p-4 rounded-2xl">${servicesHtml}</div></div>
-                        <div class="mt-auto mb-8"><a href="https://zalo.me/${w.phone}" target="_blank" class="w-full bg-gray-900 text-white py-4 rounded-xl text-center text-sm font-bold hover:bg-gray-800 hover:shadow-lg transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-comment-dots"></i> Liên hệ Zalo / Trao đổi</a></div>
-                        <div class="border-t border-gray-100 pt-6">
-                            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Nhận xét từ khách hàng</h3>
-                            <div id="reviewList-${id}" class="space-y-3 mb-4 max-h-48 overflow-y-auto custom-scroll pr-2"><p class="text-xs text-gray-400 italic">Đang tải...</p></div>
-                            <div class="flex gap-2 items-center bg-gray-50 p-2 rounded-xl border border-gray-200"><input type="text" id="reviewInput-${id}" placeholder="Chia sẻ trải nghiệm..." class="flex-1 bg-transparent border-none text-sm px-3 focus:outline-none focus:ring-0 text-gray-800"><button onclick="submitReview('${id}')" class="bg-gray-900 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">Gửi</button></div>
-                        </div>
+                    <div class="w-full md:w-[40%]"><div class="aspect-[9/16] rounded-2xl overflow-hidden"><img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="w-full h-full object-cover"></div></div>
+                    <div class="w-full md:w-[60%] flex flex-col">
+                        <h2 class="text-3xl lg:text-4xl font-extrabold mb-4">${w.fullname}</h2>
+                        <p class="bg-gray-100 inline-block px-3 py-1.5 rounded-lg mb-6 font-semibold"><i class="fa-solid fa-map-location-dot"></i> Phục vụ: ${w.last_location || 'Toàn quốc'}</p>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50 p-5 rounded-2xl mb-8"><div><p class="text-xs text-gray-500 uppercase">Năm sinh</p><p class="font-bold">${w.birth || '--'}</p></div><div><p class="text-xs text-gray-500 uppercase">Giới tính</p><p class="font-bold">${w.gender || '--'}</p></div><div><p class="text-xs text-gray-500 uppercase">Chiều cao</p><p class="font-bold">${w.height || '--'}</p></div><div><p class="text-xs text-gray-500 uppercase">Cân nặng</p><p class="font-bold">${w.weight || '--'}</p></div></div>
+                        <div class="mb-8"><h3 class="font-bold uppercase text-sm border-b pb-2 mb-3">Kinh nghiệm</h3><p class="text-sm text-gray-600 leading-relaxed">${w.exp || 'Chưa cập nhật.'}</p></div>
+                        <div class="bg-white border p-5 rounded-2xl mb-8 flex justify-between"><div><p class="text-xs uppercase text-gray-500">Thời gian</p><p class="font-bold">${w.working_time || 'Thỏa thuận'}</p></div><div class="border-l pl-5"><p class="text-xs uppercase text-gray-500">Thù lao</p><p class="text-xl font-bold">${w.expected_salary || 'Thỏa thuận'}</p></div></div>
+                        <div class="mb-8"><h3 class="font-bold uppercase text-sm border-b pb-2 mb-3">Menu Dịch Vụ</h3>${servicesHtml}</div>
+                        <a href="https://zalo.me/${w.phone}" target="_blank" class="w-full bg-gray-900 text-white py-4 rounded-xl text-center font-bold mb-8">LIÊN HỆ ZALO</a>
+                        <h3 class="font-bold uppercase text-sm border-b pb-2 mb-4">Nhận xét</h3><div id="reviewList-${id}" class="space-y-3 mb-4 max-h-48 overflow-y-auto custom-scroll pr-2"></div>
+                        <div class="flex gap-2 bg-gray-50 p-2 rounded-xl border"><input type="text" id="reviewInput-${id}" placeholder="Chia sẻ..." class="flex-1 bg-transparent px-3 text-sm outline-none"><button onclick="submitReview('${id}')" class="bg-gray-900 text-white px-5 py-2 rounded-lg text-sm">Gửi</button></div>
                     </div>
                 </div>
             `;
             document.getElementById('detailModal').classList.remove('hidden');
-            onValue(ref(rtdb, 'reviews/' + id), (s) => {
-                const vals = s.val();
-                const listEl = document.getElementById(`reviewList-${id}`);
-                if (listEl && vals) listEl.innerHTML = Object.values(vals).reverse().map(r => `<div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100"><p class="text-sm text-gray-800">${r.text}</p><p class="text-[10px] font-semibold text-gray-400 mt-1.5">${new Date(r.timestamp).toLocaleString('vi-VN')}</p></div>`).join('');
-                else if (listEl) listEl.innerHTML = `<p class="text-xs text-gray-400 italic">Chưa có nhận xét nào.</p>`;
-            });
+            onValue(ref(rtdb, 'reviews/' + id), (s) => { if (document.getElementById(`reviewList-${id}`) && s.val()) document.getElementById(`reviewList-${id}`).innerHTML = Object.values(s.val()).reverse().map(r => `<div class="bg-white p-3.5 rounded-xl border text-sm"><p>${r.text}</p></div>`).join(''); });
         };
 
         window.closeModal = () => document.getElementById('detailModal').classList.add('hidden');
         window.submitReview = (id) => { const i = document.getElementById(`reviewInput-${id}`); if(i.value.trim()){ push(ref(rtdb, 'reviews/' + id), { text: i.value.trim(), timestamp: Date.now() }); i.value = ''; } };
         window.openReportModal = (id) => { currentReportId = id; document.getElementById('reportModal').classList.remove('hidden'); };
-        window.closeReportModal = () => { document.getElementById('reportModal').classList.add('hidden'); currentReportId = null; };
-        window.submitReport = (reason) => { push(ref(rtdb, 'reports/' + currentReportId), { reason: reason, timestamp: Date.now() }); alert(`Đã gửi báo cáo: "${reason}". Admin sẽ xử lý ngay.`); closeReportModal(); };
+        window.closeReportModal = () => { document.getElementById('reportModal').classList.add('hidden'); };
+        window.submitReport = (r) => { push(ref(rtdb, 'reports/' + currentReportId), { reason: r, timestamp: Date.now() }); alert("Cảm ơn báo cáo của bạn."); closeReportModal(); };
 
         init();
     </script>
