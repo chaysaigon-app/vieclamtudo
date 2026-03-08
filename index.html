@@ -2,30 +2,82 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Cập Nhật Hồ Sơ Lao Động - Việc Làm Tự Do</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Việc Làm Tự Do - Album Đối Tác</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
+        .worker-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .worker-card:hover { transform: scale(1.02); shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .aspect-9-16 { aspect-ratio: 9 / 16; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-<body class="bg-slate-100 p-10 font-sans">
-    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-green-100">
-        <h2 class="text-xl font-black text-green-800 mb-6 uppercase text-center">Nạp Nhân Sự: Thời gian & Thù lao</h2>
-        
-        <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-64 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
-            > Chờ lệnh nạp hồ sơ đầy đủ thông số...
-        </div>
+<body class="bg-slate-100 text-slate-900 min-h-screen">
 
-        <button onclick="runAdvancedWorkerSetup()" id="btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
-             NẠP NHÂN SỰ ĐẦY ĐỦ THÔNG TIN
-        </button>
+    <a href="https://zalo.me/0909108890" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#0068ff] text-white p-4 rounded-full shadow-2xl hover:rotate-12 transition">
+        <i class="fa-solid fa-comment-dots text-2xl"></i>
+    </a>
+
+    <div class="bg-black text-white py-2 px-4 overflow-hidden relative">
+        <div class="animate-marquee whitespace-nowrap text-sm font-bold text-center">
+            🚀 KHUYẾN KHÍCH ĐĂNG KÝ ĐỐI TÁC MIỄN PHÍ - NÂNG TẦM THU NHẬP NGAY HÔM NAY! 🚀
+        </div>
+    </div>
+
+    <header class="sticky top-0 z-40 glass border-b border-white/50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <div class="shrink-0">
+                    <h1 class="text-2xl font-black italic tracking-tighter text-blue-700">VIECLAMTUDO</h1>
+                </div>
+                
+                <div class="relative flex-1 w-full">
+                    <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Tìm theo tên thợ hoặc từ khóa..." 
+                           class="w-full pl-12 pr-4 py-3 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 outline-none shadow-inner bg-white/50">
+                    <i class="fa-solid fa-search absolute left-5 top-4 text-slate-400"></i>
+                </div>
+            </div>
+
+            <div class="mt-4 flex gap-3 overflow-x-auto pb-2 hide-scroll">
+                <select id="jobFilter" onchange="filterData()" class="px-4 py-2 rounded-xl border-none ring-1 ring-slate-200 text-sm font-semibold bg-white outline-none">
+                    <option value="">Tất cả ngành nghề</option>
+                </select>
+                <select id="provinceFilter" onchange="filterData()" class="px-4 py-2 rounded-xl border-none ring-1 ring-slate-200 text-sm font-semibold bg-white outline-none">
+                    <option value="">Toàn quốc</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div id="workerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+    </main>
+
+    <div id="detailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
+        <div class="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
+            <button onclick="closeModal()" class="sticky top-6 float-right mr-6 bg-slate-100 w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalBody" class="p-8"></div>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // Cấu hình đã sửa lỗi URL Database và Region
         const firebaseConfig = {
             apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
             authDomain: "vieclamtudo-7a146.firebaseapp.com",
             projectId: "vieclamtudo-7a146",
+            databaseURL: "https://vieclamtudo-7a146-default-rtdb.asia-southeast1.firebasedatabase.app",
             storageBucket: "vieclamtudo-7a146.firebasestorage.app",
             messagingSenderId: "659703475018",
             appId: "1:659703475018:web:f1343a8e32cc030a092fb3"
@@ -33,48 +85,147 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const rtdb = getDatabase(app);
 
-        window.runAdvancedWorkerSetup = async () => {
-            const log = document.getElementById('log');
-            const btn = document.getElementById('btn');
-            btn.disabled = true;
-            log.innerHTML += `<p>> Đang nạp nhân sự mẫu có Thời gian & Thù lao...</p>`;
+        let allWorkers = [];
 
-            try {
-                const worker = {
-                    fullname: "Lê Văn Tám",
-                    gender: "Nam",
-                    height: "170cm",
-                    weight: "65kg",
-                    phone: "0912345678",
-                    birth: 1988,
-                    job_id: "dien-nuoc",
-                    province_id: "hc",
-                    last_location: "Quận Bình Thạnh, TP. HCM",
-                    
-                    // --- THÔNG TIN MỚI BỔ SUNG ---
-                    working_time: "Toàn thời gian (Rảnh 8h - 20h, cả T7/CN)", 
-                    expected_salary: "500,000đ - 800,000đ / ngày",
-                    
-                    exp: "15 năm kinh nghiệm",
-                    health: "Tốt, không bệnh nền",
-                    services: [
-                        { title: "Sửa chập điện", price: 300000, unit: "lần" },
-                        { title: "Thay máy bơm", price: 200000, unit: "máy" }
-                    ]
-                };
+        // 1. Tải danh mục lọc
+        async function initFilters() {
+            const jobs = await getDocs(collection(db, "jobs"));
+            const jobSelect = document.getElementById('jobFilter');
+            jobs.forEach(d => jobSelect.innerHTML += `<option value="${d.id}">${d.data().name}</option>`);
 
-                await addDoc(collection(db, "workers"), worker);
-                
-                log.innerHTML += `<p>> Đã nạp: ${worker.fullname}</p>`;
-                log.innerHTML += `<p>> Thù lao: ${worker.expected_salary}</p>`;
-                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT NẠP DỮ LIỆU ĐẦY ĐỦ!</p>`;
-                btn.innerText = "XONG";
-            } catch (error) {
-                log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
-                btn.disabled = false;
-            }
+            const provs = await getDocs(collection(db, "provinces"));
+            const provSelect = document.getElementById('provinceFilter');
+            provs.forEach(d => provSelect.innerHTML += `<option value="${d.id}">${d.data().name}</option>`);
+        }
+
+        // 2. Tải danh sách thợ (Dạng Album)
+        async function loadWorkers() {
+            const snap = await getDocs(collection(db, "workers"));
+            allWorkers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            render(allWorkers);
+        }
+
+        function render(data) {
+            const grid = document.getElementById('workerGrid');
+            grid.innerHTML = data.map(w => `
+                <div onclick="openDetail('${w.id}')" class="worker-card bg-white p-4 rounded-[2.5rem] flex gap-4 cursor-pointer shadow-sm border border-slate-100">
+                    <div class="w-2/5 aspect-9-16 rounded-[2rem] overflow-hidden shadow-lg">
+                        <img src="${w.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-3/5 py-4 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-black text-slate-800 leading-tight">${w.fullname}</h3>
+                            <p class="text-sm font-bold text-blue-600 mt-1">${w.birth} • ${w.gender}</p>
+                            <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-location-dot mr-1"></i>${w.last_location || 'Việt Nam'}</p>
+                        </div>
+                        <div class="text-orange-500 font-black text-sm" id="rate-${w.id}">
+                            <i class="fa-solid fa-star"></i> Đang tải...
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            data.forEach(w => syncRating(w.id));
+        }
+
+        // 3. Đánh giá Realtime
+        function syncRating(id) {
+            const starRef = ref(rtdb, 'ratings/' + id);
+            onValue(starRef, (s) => {
+                const vals = s.val();
+                if(vals) {
+                    const arr = Object.values(vals);
+                    const avg = (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1);
+                    document.getElementById(`rate-${id}`).innerHTML = `<i class="fa-solid fa-star"></i> ${avg} (${arr.length})`;
+                } else {
+                    document.getElementById(`rate-${id}`).innerHTML = `<i class="fa-solid fa-star"></i> 5.0 (Mới)`;
+                }
+            });
+        }
+
+        // 4. Modal Chi tiết & Menu giá
+        window.openDetail = (id) => {
+            const w = allWorkers.find(x => x.id === id);
+            const modal = document.getElementById('detailModal');
+            document.getElementById('modalBody').innerHTML = `
+                <div class="grid md:grid-cols-2 gap-8">
+                    <img src="${w.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'}" class="w-full aspect-9-16 object-cover rounded-[2.5rem] shadow-2xl">
+                    <div>
+                        <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Hồ sơ đối tác</span>
+                        <h2 class="text-4xl font-black mt-4">${w.fullname}</h2>
+                        <div class="flex gap-4 mt-4 text-sm font-bold text-slate-500">
+                            <span>CAO: ${w.height || 'N/A'}</span>
+                            <span>NẶNG: ${w.weight || 'N/A'}</span>
+                        </div>
+                        <p class="mt-6 text-slate-600 leading-relaxed italic">"${w.exp || 'Chưa cập nhật mô tả kinh nghiệm.'}"</p>
+                        
+                        <div class="mt-8 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                            <p class="text-xs font-black text-slate-400 uppercase">Thù lao mong muốn</p>
+                            <p class="text-3xl font-black text-orange-600 mt-1">${w.expected_salary || 'Thỏa thuận'}</p>
+                            <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-clock mr-1"></i> ${w.working_time || 'Linh hoạt'}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <h4 class="text-xl font-black mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-blue-600"></i> MENU DỊCH VỤ CHI TIẾT
+                    </h4>
+                    <div class="grid gap-3">
+                        ${w.services ? w.services.map(s => `
+                            <div class="flex justify-between items-center p-5 bg-white ring-1 ring-slate-100 rounded-2xl shadow-sm">
+                                <span class="font-bold text-slate-700">${s.title}</span>
+                                <span class="font-black text-blue-600 bg-blue-50 px-4 py-2 rounded-xl">${Number(s.price).toLocaleString()}đ</span>
+                            </div>
+                        `).join('') : '<p class="text-slate-400">Chưa cập nhật bảng giá.</p>'}
+                    </div>
+                </div>
+
+                <div class="mt-12 flex flex-col gap-4">
+                    <a href="https://zalo.me/${w.phone}" target="_blank" class="w-full py-5 bg-blue-600 text-white rounded-2xl text-center font-black shadow-xl shadow-blue-200 hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-phone"></i> LIÊN HỆ ĐẶT LỊCH NGAY
+                    </a>
+                    <button onclick="alert('Đã báo cáo vi phạm cho Admin!')" class="text-xs font-bold text-red-400 hover:text-red-600 transition uppercase tracking-widest">
+                        <i class="fa-solid fa-flag"></i> Báo cáo thông tin sai / Người ảo
+                    </button>
+                </div>
+
+                <div class="mt-12 border-t pt-8">
+                    <p class="font-black text-sm mb-4">ĐÁNH GIÁ TRỰC TIẾP</p>
+                    <div class="flex gap-3">
+                        ${[1,2,3,4,5].map(n => `<button onclick="vote('${id}', ${n})" class="w-12 h-12 rounded-2xl bg-slate-100 font-black hover:bg-orange-500 hover:text-white transition shadow-sm">${n}</button>`).join('')}
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        window.vote = (id, n) => {
+            push(ref(rtdb, 'ratings/' + id), n);
+            alert("Cảm ơn bạn đã bình chọn " + n + " sao!");
         };
+
+        window.closeModal = () => document.getElementById('detailModal').classList.add('hidden');
+
+        // 5. Tìm kiếm & Lọc
+        window.filterData = () => {
+            const s = document.getElementById('searchInput').value.toLowerCase();
+            const j = document.getElementById('jobFilter').value;
+            const p = document.getElementById('provinceFilter').value;
+
+            const filtered = allWorkers.filter(w => {
+                const matchSearch = w.fullname.toLowerCase().includes(s);
+                const matchJob = j ? w.job_id === j : true;
+                const matchProv = p ? w.province_id === p : true;
+                return matchSearch && matchJob && matchProv;
+            });
+            render(filtered);
+        }
+
+        initFilters();
+        loadWorkers();
     </script>
 </body>
 </html>
