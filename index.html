@@ -2,19 +2,19 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Nạp Tỉnh Thành Đợt 2 - Việc Làm Tự Do</title>
+    <title>Nạp Tỉnh Thành Đợt 3 - Hoàn Tất Địa Phương</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 p-10 font-sans">
     <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-indigo-100">
-        <h2 class="text-xl font-black text-indigo-700 mb-6 uppercase text-center">Nạp Địa Phương - Đợt 2 (Tỉnh 21 - 40)</h2>
+        <h2 class="text-xl font-black text-indigo-700 mb-6 uppercase text-center">Nạp Địa Phương - Đợt 3 (Cuối cùng)</h2>
         
         <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-64 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
-            > Chờ lệnh nạp 20 tỉnh tiếp theo...
+            > Chờ lệnh nạp 23 tỉnh cuối cùng...
         </div>
 
-        <button onclick="runProvinceDot2()" id="btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
-             BẮT ĐẦU NẠP ĐỢT 2 (20 TỈNH)
+        <button onclick="runProvinceDot3()" id="btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
+             BẮT ĐẦU NẠP ĐỢT 3 (HOÀN TẤT)
         </button>
     </div>
 
@@ -34,32 +34,33 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DANH SÁCH 20 TỈNH TIẾP THEO (ĐỢT 2)
-        const provincesDot2 = [
-            {id: 'gl', name: 'Gia Lai'}, {id: 'hg', name: 'Hà Giang'}, {id: 'hm', name: 'Hà Nam'}, 
-            {id: 'hn', name: 'Hà Nội'}, {id: 'ht', name: 'Hà Tĩnh'}, {id: 'hd', name: 'Hải Dương'}, 
-            {id: 'hp', name: 'Hải Phòng'}, {id: 'hu', name: 'Hậu Giang'}, {id: 'ho', name: 'Hòa Bình'}, 
-            {id: 'hy', name: 'Hưng Yên'}, {id: 'kh', name: 'Khánh Hòa'}, {id: 'kg', name: 'Kiên Giang'}, 
-            {id: 'kt', name: 'Kon Tum'}, {id: 'lc', name: 'Lai Châu'}, {id: 'ld', name: 'Lâm Đồng'}, 
-            {id: 'ls', name: 'Lạng Sơn'}, {id: 'li', name: 'Lào Cai'}, {id: 'la', name: 'Long An'}, 
-            {id: 'nd', name: 'Nam Định'}, {id: 'an', name: 'Nghệ An'}
+        // DANH SÁCH 23 TỈNH CUỐI CÙNG
+        const provincesDot3 = [
+            {id: 'nb', name: 'Ninh Bình'}, {id: 'nt', name: 'Ninh Thuận'}, {id: 'pt', name: 'Phú Thọ'}, 
+            {id: 'py', name: 'Phú Yên'}, {id: 'qb', name: 'Quảng Bình'}, {id: 'qn', name: 'Quảng Nam'}, 
+            {id: 'ng', name: 'Quảng Ngãi'}, {id: 'ni', name: 'Quảng Ninh'}, {id: 'ri', name: 'Quảng Trị'}, 
+            {id: 'st', name: 'Sóc Trăng'}, {id: 'sl', name: 'Sơn La'}, {id: 'tn', name: 'Tây Ninh'}, 
+            {id: 'tb', name: 'Thái Bình'}, {id: 'ty', name: 'Thái Nguyên'}, {id: 'th', name: 'Thanh Hóa'}, 
+            {id: 'tt', name: 'Thừa Thiên Huế'}, {id: 'tg', name: 'Tiền Giang'}, {id: 'hc', name: 'TP. Hồ Chí Minh'}, 
+            {id: 'tv', name: 'Trà Vinh'}, {id: 'tq', name: 'Tuyên Quang'}, {id: 'vl', name: 'Vĩnh Long'}, 
+            {id: 'vp', name: 'Vĩnh Phúc'}, {id: 'yb', name: 'Yên Bái'}
         ];
 
-        window.runProvinceDot2 = async () => {
+        window.runProvinceDot3 = async () => {
             const log = document.getElementById('log');
             const btn = document.getElementById('btn');
             btn.disabled = true;
-            log.innerHTML += `<p>> Đang nạp 20 địa phương đợt 2...</p>`;
+            log.innerHTML += `<p>> Đang nạp đợt cuối cùng...</p>`;
 
             try {
-                for (let p of provincesDot2) {
+                for (let p of provincesDot3) {
                     await setDoc(doc(db, "provinces", p.id), p);
                     log.innerHTML += `<p>> Đã nạp: ${p.name}</p>`;
                     log.scrollTop = log.scrollHeight;
                 }
 
-                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT ĐỢT 2 (40/63 TỈNH THÀNH)!</p>`;
-                btn.innerText = "XONG ĐỢT 2";
+                log.innerHTML += `<p class="text-blue-400 font-bold">> CHÚC MỪNG! ĐÃ HOÀN TẤT 63 TỈNH THÀNH.</p>`;
+                btn.innerText = "HOÀN TẤT TOÀN BỘ";
             } catch (error) {
                 log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
                 btn.disabled = false;
