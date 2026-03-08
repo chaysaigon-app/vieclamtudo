@@ -2,25 +2,25 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Hệ Thống Lao Động Tự Do Toàn Quốc - Cập Nhật Mới</title>
+    <title>Nạp Dữ Liệu Đợt 2 - Việc Làm Tự Do</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 p-6 font-sans">
-    <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-2xl border border-blue-100">
-        <h2 class="text-2xl font-black text-blue-800 mb-6 uppercase tracking-tighter">Đồng bộ 100 Ngành Nghề & Địa Phương Mới</h2>
+<body class="bg-slate-100 p-10 font-sans">
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
+        <h2 class="text-xl font-black text-blue-800 mb-6 uppercase">Nạp Dữ Liệu Đợt 2 (Nghề 21 - 40)</h2>
         
-        <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-80 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
-            > Chờ lệnh nạp dữ liệu quy mô lớn...
+        <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-64 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
+            > Chờ nhấn nút để nạp đợt 2...
         </div>
 
-        <button onclick="runLargeSetup()" id="btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
-            NẠP DỮ LIỆU CHUẨN (100 NGHỀ)
+        <button onclick="runSetupDot2()" id="btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
+             BẮT ĐẦU NẠP ĐỢT 2
         </button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
@@ -34,54 +34,45 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DANH SÁCH 100 NGÀNH NGHỀ (Tối ưu hóa đa dạng lĩnh vực)
-        const jobs = [
-            {id: 'dien-nuoc', name: 'Điện nước'}, {id: 'don-dep', name: 'Dọn dẹp nhà'}, {id: 'sua-lanh', name: 'Sửa điện lạnh'},
-            {id: 'nau-an', name: 'Nấu ăn gia đình'}, {id: 'giao-hang', name: 'Shipper chuyên nghiệp'}, {id: 'sua-xe', name: 'Sửa xe tận nơi'},
-            {id: 'gia-su', name: 'Gia sư dạy kèm'}, {id: 'xay-dung', name: 'Thợ nề/Sơn nước'}, {id: 'giup-viec', name: 'Giúp việc theo giờ'},
-            {id: 'massage', name: 'Massage trị liệu'}, {id: 'cat-toc', name: 'Cắt tóc nam/nữ'}, {id: 'sua-it', name: 'Sửa máy tính/Cài Win'},
-            {id: 'chup-anh', name: 'Chụp ảnh sự kiện'}, {id: 'boc-vac', name: 'Bốc vác hàng hóa'}, {id: 'nhom-kinh', name: 'Cửa nhôm kính'},
-            {id: 'sua-khoa', name: 'Thợ sửa khóa'}, {id: 'thong-cong', name: 'Thông tắc vệ sinh'}, {id: 'cham-soc-pet', name: 'Chăm sóc thú cưng'},
-            {id: 'dan-vua', name: 'Thợ dán tường'}, {id: 'lap-camera', name: 'Lắp đặt Camera'}, {id: 'sua-tivi', name: 'Sửa đồ điện tử'},
-            {id: 'giat-ui', name: 'Giặt ủi tận nơi'}, {id: 'rua-xe', name: 'Rửa xe tại nhà'}, {id: 'mai-dao', name: 'Thợ mài dao kéo'},
-            {id: 'di-cho-ho', name: 'Đi chợ hộ'}, {id: 'cham-nguoi-benh', name: 'Chăm sóc người bệnh'}, {id: 've-sinh-sofa', name: 'Giặt Sofa/Nệm'},
-            {id: 'trang-tri-tiec', name: 'Trang trí sự kiện'}, {id: 'sua-giay', name: 'Đóng/Sửa giày dép'}, {id: 'may-va', name: 'Sửa quần áo'},
-            // ... (Tiếp tục liệt kê đủ 100 nghề để bao quát toàn bộ thị trường lao động tự do)
+        // DANH SÁCH 20 NGHỀ TIẾP THEO (ĐỢT 2 - KHÔNG TRÙNG ĐỢT 1)
+        const jobsDot2 = [
+            {id: 'sua-giay', name: 'Sửa giày dép/Túi xách'},
+            {id: 'may-va', name: 'Sửa quần áo tận nơi'},
+            {id: 've-sinh-sofa', name: 'Giặt Sofa/Nệm/Rèm'},
+            {id: 'mai-dao', name: 'Thợ mài dao kéo'},
+            {id: 'di-cho-ho', name: 'Đi chợ hộ/Mua sắm'},
+            {id: 'cham-nguoi-gia', name: 'Chăm sóc người già'},
+            {id: 'trang-tri-tiec', name: 'Trang trí tiệc/Hoa tươi'},
+            {id: 'rua-xe-tai-nha', name: 'Rửa xe tại nhà'},
+            {id: 'giat-ui', name: 'Giặt ủi giao tận nơi'},
+            {id: 'sua-tivi', name: 'Sửa Tivi/Loa đài'},
+            {id: 'thong-tac-bon-cau', name: 'Thông tắc bồn cầu'},
+            {id: 'diet-moi', name: 'Diệt mối/Côn trùng'},
+            {id: 'khoan-cat-be-tong', name: 'Khoan cắt bê tông'},
+            {id: 'han-xi', name: 'Thợ hàn sắt/Inox'},
+            {id: 'son-cua-sat', name: 'Sơn cửa sắt/Hàng rào'},
+            {id: 've-sinh-be-nuoc', name: 'Vệ sinh bể nước/Bồn'},
+            {id: 'lap-rem-cua', name: 'Lắp rèm cửa/Màn'},
+            {id: 'sua-bep-gas', name: 'Sửa bếp Gas/Bếp từ'},
+            {id: 'thong-gio', name: 'Vệ sinh quạt thông gió'},
+            {id: 'lap-chuong-cua', name: 'Lắp chuông cửa/Khóa số'}
         ];
 
-        window.runLargeSetup = async () => {
+        window.runSetupDot2 = async () => {
             const log = document.getElementById('log');
             const btn = document.getElementById('btn');
             btn.disabled = true;
-            log.innerHTML += `<p>> Khởi động nạp dữ liệu quy mô lớn 2026...</p>`;
+            log.innerHTML += `<p>> Đang nạp 20 nghề tiếp theo...</p>`;
 
             try {
-                // 1. Nạp danh mục Ngành nghề (100 nghề)
-                for (let j of jobs) {
+                for (let j of jobsDot2) {
                     await setDoc(doc(db, "jobs", j.id), j);
-                    log.innerHTML += `<p>> Đã nạp nghề: ${j.name}</p>`;
+                    log.innerHTML += `<p>> Đã nạp: ${j.name}</p>`;
+                    log.scrollTop = log.scrollHeight;
                 }
 
-                // 2. Tạo hồ sơ mẫu với Menu dịch vụ chi tiết (Menu con người)
-                const worker = {
-                    fullname: "Trần Anh Quân",
-                    phone: "0909108890",
-                    city_id: "hc", // Cập nhật mã vùng mới
-                    job_id: "sua-lanh",
-                    birth: 1992,
-                    health: "Tốt/Chứng chỉ hành nghề",
-                    family: "Ổn định",
-                    exp: "12 năm kinh nghiệm",
-                    services: [
-                        { title: "Vệ sinh máy lạnh Inverter", price: 200000, unit: "bộ" },
-                        { title: "Sửa board mạch điều hòa", price: 450000, unit: "lần" },
-                        { title: "Bơm ga R32/R410A", price: 150000, unit: "máy" }
-                    ]
-                };
-                await addDoc(collection(db, "workers"), worker);
-
-                log.innerHTML += `<p class="text-blue-400 font-bold">> CẬP NHẬT 100 NGHỀ & ĐỊA PHƯƠNG HOÀN TẤT!</p>`;
-                btn.innerText = "ĐÃ ĐỒNG BỘ";
+                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT ĐỢT 2 (40/100 NGHỀ)!</p>`;
+                btn.innerText = "XONG ĐỢT 2";
             } catch (error) {
                 log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
                 btn.disabled = false;
