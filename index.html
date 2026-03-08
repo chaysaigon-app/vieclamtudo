@@ -2,25 +2,25 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Nạp Tỉnh Thành Đợt 3 - Hoàn Tất Địa Phương</title>
+    <title>Cập Nhật Chi Tiết Nhân Sự - Việc Làm Tự Do</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 p-10 font-sans">
-    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-indigo-100">
-        <h2 class="text-xl font-black text-indigo-700 mb-6 uppercase text-center">Nạp Địa Phương - Đợt 3 (Cuối cùng)</h2>
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+        <h2 class="text-xl font-black text-blue-800 mb-6 uppercase text-center">Cập Nhật Thể Hình & Địa Điểm</h2>
         
         <div id="log" class="text-[11px] bg-slate-900 text-green-400 p-4 rounded-xl h-64 overflow-y-auto mb-6 font-mono border border-slate-800 shadow-inner">
-            > Chờ lệnh nạp 23 tỉnh cuối cùng...
+            > Chờ nạp hồ sơ nhân sự đầy đủ thông tin...
         </div>
 
-        <button onclick="runProvinceDot3()" id="btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
-             BẮT ĐẦU NẠP ĐỢT 3 (HOÀN TẤT)
+        <button onclick="runWorkerUpdate()" id="btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg transition transform active:scale-95 flex justify-center items-center gap-2">
+             BẮT ĐẦU CẬP NHẬT NHÂN SỰ
         </button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
@@ -34,33 +34,38 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DANH SÁCH 23 TỈNH CUỐI CÙNG
-        const provincesDot3 = [
-            {id: 'nb', name: 'Ninh Bình'}, {id: 'nt', name: 'Ninh Thuận'}, {id: 'pt', name: 'Phú Thọ'}, 
-            {id: 'py', name: 'Phú Yên'}, {id: 'qb', name: 'Quảng Bình'}, {id: 'qn', name: 'Quảng Nam'}, 
-            {id: 'ng', name: 'Quảng Ngãi'}, {id: 'ni', name: 'Quảng Ninh'}, {id: 'ri', name: 'Quảng Trị'}, 
-            {id: 'st', name: 'Sóc Trăng'}, {id: 'sl', name: 'Sơn La'}, {id: 'tn', name: 'Tây Ninh'}, 
-            {id: 'tb', name: 'Thái Bình'}, {id: 'ty', name: 'Thái Nguyên'}, {id: 'th', name: 'Thanh Hóa'}, 
-            {id: 'tt', name: 'Thừa Thiên Huế'}, {id: 'tg', name: 'Tiền Giang'}, {id: 'hc', name: 'TP. Hồ Chí Minh'}, 
-            {id: 'tv', name: 'Trà Vinh'}, {id: 'tq', name: 'Tuyên Quang'}, {id: 'vl', name: 'Vĩnh Long'}, 
-            {id: 'vp', name: 'Vĩnh Phúc'}, {id: 'yb', name: 'Yên Bái'}
-        ];
-
-        window.runProvinceDot3 = async () => {
+        window.runWorkerUpdate = async () => {
             const log = document.getElementById('log');
             const btn = document.getElementById('btn');
             btn.disabled = true;
-            log.innerHTML += `<p>> Đang nạp đợt cuối cùng...</p>`;
+            log.innerHTML += `<p>> Đang nạp nhân sự mẫu đầy đủ thông tin thể hình...</p>`;
 
             try {
-                for (let p of provincesDot3) {
-                    await setDoc(doc(db, "provinces", p.id), p);
-                    log.innerHTML += `<p>> Đã nạp: ${p.name}</p>`;
-                    log.scrollTop = log.scrollHeight;
-                }
+                // HỒ SƠ NHÂN SỰ ĐẦY ĐỦ CÁC TRƯỜNG MỚI
+                const worker = {
+                    fullname: "Trần Anh Quân",
+                    gender: "Nam",              // Giới tính
+                    height: "175cm",            // Chiều cao
+                    weight: "70kg",             // Cân nặng
+                    phone: "0909108890",
+                    birth: 1992,
+                    health: "Tốt",
+                    family: "Ổn định",
+                    job_id: "sua-lanh",
+                    province_id: "hc",
+                    last_location: "Quận 1, TP. HCM", // Địa điểm làm việc gần nhất
+                    exp: "12 năm",
+                    services: [
+                        { title: "Vệ sinh máy lạnh", price: 200000, unit: "bộ" },
+                        { title: "Sửa board mạch", price: 450000, unit: "lần" }
+                    ]
+                };
 
-                log.innerHTML += `<p class="text-blue-400 font-bold">> CHÚC MỪNG! ĐÃ HOÀN TẤT 63 TỈNH THÀNH.</p>`;
-                btn.innerText = "HOÀN TẤT TOÀN BỘ";
+                await addDoc(collection(db, "workers"), worker);
+                
+                log.innerHTML += `<p>> Đã nạp nhân sự: ${worker.fullname}</p>`;
+                log.innerHTML += `<p class="text-blue-400 font-bold">> HOÀN TẤT CẬP NHẬT CẤU TRÚC NHÂN SỰ!</p>`;
+                btn.innerText = "ĐÃ CẬP NHẬT XONG";
             } catch (error) {
                 log.innerHTML += `<p class="text-red-500">> Lỗi: ${error.message}</p>`;
                 btn.disabled = false;
