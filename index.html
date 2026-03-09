@@ -106,11 +106,15 @@
     <div id="reportModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 relative">
             <button onclick="closeReportModal()" class="absolute top-4 right-4 text-black hover:text-red-600 bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-xl font-black text-black mb-5 border-b-2 border-red-500 inline-block pb-1">Báo cáo vi phạm</h3>
-            <div class="flex flex-col gap-3 mt-4">
-                <button onclick="submitReport('Thông tin sai')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-black hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-all">1. Thông tin sai</button>
-                <button onclick="submitReport('Không liên hệ được')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-black hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-all">2. Không liên hệ được</button>
-                <button onclick="submitReport('Lừa đảo')" class="w-full text-left px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-black hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-all">3. Lừa đảo</button>
+            <h3 class="text-xl font-black text-black mb-2 border-b-2 border-red-500 inline-block pb-1">Báo cáo vi phạm</h3>
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">Để ngăn chặn phá hoại, bắt buộc phải cung cấp phương thức liên hệ. Admin sẽ giữ bí mật và liên hệ để xin bằng chứng.</p>
+            
+            <input type="text" id="reporterContact" placeholder="Nhập Zalo hoặc Email của bạn..." class="w-full mb-4 px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-sm font-bold text-black focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition shadow-sm placeholder-gray-400">
+
+            <div class="flex flex-col gap-3">
+                <button onclick="submitReport('Thông tin sai')" class="w-full text-left px-5 py-4 bg-red-50 border border-red-100 rounded-xl text-sm font-bold text-red-700 hover:bg-red-100 hover:border-red-300 transition-all">1. Thông tin sai</button>
+                <button onclick="submitReport('Không liên hệ được')" class="w-full text-left px-5 py-4 bg-red-50 border border-red-100 rounded-xl text-sm font-bold text-red-700 hover:bg-red-100 hover:border-red-300 transition-all">2. Không liên hệ được</button>
+                <button onclick="submitReport('Lừa đảo')" class="w-full text-left px-5 py-4 bg-red-50 border border-red-100 rounded-xl text-sm font-bold text-red-700 hover:bg-red-100 hover:border-red-300 transition-all">3. Lừa đảo</button>
             </div>
         </div>
     </div>
@@ -148,7 +152,6 @@
             allProvinces.forEach(p => document.getElementById('provinceSelect').innerHTML += `<option value="${p.id}">${p.name}</option>`);
             
             renderTags(); 
-            // ĐÃ SỬA LỖI NÀY: Dùng filterData() ngay từ đầu để loại bỏ các tài khoản bị ẩn
             filterData(); 
         }
 
@@ -187,6 +190,7 @@
             grid.innerHTML = data.map(w => {
                 const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
                 
+                // Ở lưới: Chỉ hiện tick xanh, người chưa có tick thì không hiện gì để gọn gàng
                 const verifiedIcon = w.is_verified 
                     ? `<span class="inline-flex items-center gap-1 ml-2 px-2 py-0.5 bg-blue-50 border border-blue-200 text-blue-600 rounded text-[10px] font-bold cursor-pointer shrink-0" title="Đã xác minh" onclick="event.stopPropagation(); alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check"></i> Đã xác minh</span>` 
                     : ``;
@@ -232,15 +236,22 @@
             const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
             let servicesHtml = (w.services || []).map(s => `<div class="flex justify-between py-3 border-b border-gray-200 last:border-0"><span class="text-sm font-bold text-black">${s.title}</span><div class="text-right"><span class="text-sm font-black text-blue-700">${Number(s.price).toLocaleString()}đ</span><span class="text-xs text-black font-medium ml-1">/ ${s.unit || 'lần'}</span></div></div>`).join('') || '<p class="text-sm text-black font-medium italic">Chưa cập nhật bảng giá.</p>';
             
-            // ĐÃ SỬA: Đổi lại nội dung cảnh báo và chuyển qua Zalo
+            // Huy hiệu nổi ở góc trên (Tương tác bật Zalo)
+            const topCornerBadge = w.is_verified 
+                ? `<div class="absolute top-4 left-4 bg-blue-500/90 backdrop-blur text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md cursor-pointer z-10 border border-blue-400" onclick="alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check"></i> Đã xác minh</div>` 
+                : `<div class="absolute top-4 left-4 bg-gray-800/80 backdrop-blur text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md cursor-pointer z-10 border border-gray-600" onclick="alert('Tài khoản chưa được xác minh, vui lòng liên hệ Admin để được xác minh!'); window.open('https://zalo.me/0909108890', '_blank');"><i class="fa-solid fa-circle-check text-gray-300"></i> Chưa xác minh</div>`;
+
+            // Khối trạng thái ở dưới khu vực (Tương tác bật Zalo)
             const verifyStatusHtml = w.is_verified 
                 ? `<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-sm font-black cursor-pointer shadow-sm" onclick="alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check text-blue-600 text-lg"></i> Tài khoản đã xác minh</div>` 
                 : `<div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-xl text-sm font-bold cursor-pointer shadow-sm hover:bg-gray-100 transition" onclick="alert('Tài khoản chưa được xác minh, vui lòng liên hệ Admin để được xác minh!'); window.open('https://zalo.me/0909108890', '_blank');"><i class="fa-solid fa-circle-xmark text-gray-400 text-lg"></i> Chưa xác minh</div>`;
+
 
             document.getElementById('modalBody').innerHTML = `
                 <div class="flex flex-col md:flex-row gap-8 lg:gap-12 relative">
                     <div class="w-full md:w-[40%] flex-shrink-0 relative">
                         <div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden sticky top-0 shadow-inner border border-gray-200 relative">
+                            ${topCornerBadge}
                             <img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="w-full h-full object-cover">
                         </div>
                     </div>
@@ -309,17 +320,35 @@
         window.openReportModal = (id) => { currentReportId = id; document.getElementById('reportModal').classList.remove('hidden'); };
         window.closeReportModal = () => { document.getElementById('reportModal').classList.add('hidden'); };
         
+        // HÀM BÁO CÁO CÓ KIỂM TRA ZALO/EMAIL
         window.submitReport = async (r) => { 
-            push(ref(rtdb, 'reports/' + currentReportId), { reason: r, timestamp: Date.now() }); 
+            const contactInput = document.getElementById('reporterContact');
+            const contactInfo = contactInput.value.trim();
+
+            if (!contactInfo) {
+                alert("BẮT BUỘC: Vui lòng nhập số Zalo hoặc Email của bạn để Admin có thể xác minh báo cáo!");
+                contactInput.focus();
+                return;
+            }
+
+            push(ref(rtdb, 'reports/' + currentReportId), { reason: r, contact: contactInfo, timestamp: Date.now() }); 
+            
             const w = workers.find(x => x.id === currentReportId);
             try {
                 await addDoc(collection(db, "mail"), {
                     to: ["chaysaigon@gmail.com"],
-                    message: { subject: `🚨 CẢNH BÁO: Báo cáo vi phạm (${r})`, html: `<p>Thợ <b>${w ? w.fullname : currentReportId}</b> vừa bị báo cáo với lý do: ${r}</p><p>Vui lòng vào trang Admin để kiểm tra và xử lý ẩn hồ sơ nếu cần.</p>` }
+                    message: { 
+                        subject: `🚨 CẢNH BÁO: Báo cáo vi phạm (${r})`, 
+                        html: `<p>Thợ <b>${w ? w.fullname : currentReportId}</b> vừa bị báo cáo.</p>
+                               <p>Lý do: <b style="color:red;">${r}</b></p>
+                               <p>Người báo cáo (Zalo/Email): <b style="color:blue;">${contactInfo}</b></p>
+                               <p>Vui lòng vào trang Admin để kiểm tra và liên hệ xin bằng chứng trước khi xử phạt.</p>` 
+                    }
                 });
             } catch (e) { console.error("Lỗi gửi mail:", e); }
 
-            alert(`Đã gửi báo cáo: "${r}". Admin sẽ xử lý ngay.`); 
+            alert(`Cảm ơn bạn! Đã gửi báo cáo. Admin sẽ liên hệ qua "${contactInfo}" để xác minh.`); 
+            contactInput.value = '';
             closeReportModal(); 
         };
 
