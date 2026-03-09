@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Đối Tác Miễn Phí - Sàn Dịch Vụ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-black pb-20">
+
+    <header class="bg-white/95 backdrop-blur-md border-b-2 border-blue-600 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-3xl mx-auto px-5 h-16 flex items-center gap-4">
+            <a href="index.html" class="text-blue-600 hover:text-blue-800 transition p-2"><i class="fa-solid fa-arrow-left text-xl"></i></a>
+            <h1 class="text-lg md:text-xl font-black tracking-tight text-blue-800 uppercase truncate">Tham Gia Sàn Dịch Vụ</h1>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-5 mt-10">
+        <div class="mb-8">
+            <h2 class="text-2xl font-black text-black mb-2">Tạo hồ sơ năng lực miễn phí</h2>
+            <p class="text-sm font-medium text-gray-700">Điền đầy đủ thông tin để khách hàng dễ dàng tìm thấy và tin tưởng lựa chọn bạn. Hồ sơ mới sẽ ở trạng thái "Chưa xác minh".</p>
+        </div>
+
+        <form id="regForm" class="space-y-8 bg-white p-6 md:p-10 rounded-3xl shadow-lg border border-blue-50">
+            
+            <div>
+                <label class="block text-xs font-black text-black uppercase tracking-widest mb-3">1. Ảnh đại diện (Link ảnh đứng 9:16)</label>
+                <input type="url" id="avatar" placeholder="VD: https://link-anh-cua-ban.jpg" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
+                <p class="text-[11px] font-medium text-gray-500 mt-2 italic">* Tạm thời dán link ảnh online. Hãy chọn ảnh rõ mặt, chuyên nghiệp.</p>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <div>
+                <label class="block text-xs font-black text-black uppercase tracking-widest mb-4">2. Thông tin cơ bản</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="fullname" placeholder="Họ và tên thật" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold placeholder-gray-500">
+                    <input type="tel" id="phone" placeholder="Số điện thoại / Zalo liên hệ" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold placeholder-gray-500">
+                    <input type="number" id="birth" placeholder="Năm sinh (VD: 1995)" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
+                    <select id="gender" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium appearance-none cursor-pointer">
+                        <option value="Nam">Giới tính: Nam</option>
+                        <option value="Nữ">Giới tính: Nữ</option>
+                        <option value="Khác">Giới tính: Khác</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" id="height" placeholder="Chiều cao (VD: 1m70)" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
+                <input type="text" id="weight" placeholder="Cân nặng (VD: 65kg)" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
+            </div>
+
+            <hr class="border-gray-200">
+
+            <div>
+                <label class="block text-xs font-black text-black uppercase tracking-widest mb-4">3. Chuyên môn & Khu vực</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <select id="job_id" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold appearance-none cursor-pointer">
+                        <option value="">-- Chọn ngành nghề --</option>
+                    </select>
+                    <select id="province_id" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold appearance-none cursor-pointer">
+                        <option value="">-- Chọn Tỉnh / Thành phố --</option>
+                    </select>
+                </div>
+                <input type="text" id="last_location" placeholder="Khu vực phục vụ cụ thể (VD: Các quận nội thành, Quận 1, Quận 3...)" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
+            </div>
+
+            <hr class="border-gray-200">
+
+            <div>
+                <label class="block text-xs font-black text-black uppercase tracking-widest mb-4">4. Năng lực & Yêu cầu</label>
+                <textarea id="exp" required placeholder="Mô tả chi tiết kinh nghiệm, kỹ năng, điểm mạnh của bạn để thuyết phục khách hàng..." class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium h-32 mb-4 placeholder-gray-500"></textarea>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="working_time" placeholder="Thời gian làm việc (VD: 8h-20h mỗi ngày)" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
+                    <input type="text" id="expected_salary" placeholder="Thù lao kỳ vọng chung (VD: 500k/ngày)" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold placeholder-gray-500">
+                </div>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <div>
+                <label class="block text-xs font-black text-black uppercase tracking-widest mb-2">5. Bảng giá chi tiết</label>
+                <p class="text-xs font-medium text-gray-600 mb-4">Liệt kê cụ thể từng hạng mục dịch vụ để khách hàng dễ dàng tham khảo.</p>
+                
+                <div id="serviceList" class="space-y-3 mb-5">
+                    </div>
+                
+                <button type="button" onclick="addServiceRow()" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition flex items-center gap-2 px-2">
+                    <i class="fa-solid fa-circle-plus"></i> Thêm một dịch vụ khác
+                </button>
+            </div>
+
+            <div class="pt-6">
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-5 rounded-2xl font-black text-lg uppercase tracking-wider hover:from-orange-500 hover:to-red-600 hover:shadow-xl transition-all shadow-md">
+                    Hoàn Tất Đăng Ký
+                </button>
+                <p class="text-center text-xs font-medium text-gray-500 mt-4">
+                    Bằng việc nhấp "Hoàn tất", bạn đồng ý tự chịu trách nhiệm về tính chính xác của thông tin.
+                </p>
+            </div>
+
+        </form>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // CẤU HÌNH FIREBASE GỐC CỦA BẠN
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
+            authDomain: "vieclamtudo-7a146.firebaseapp.com",
+            projectId: "vieclamtudo-7a146",
+            databaseURL: "https://vieclamtudo-7a146-default-rtdb.asia-southeast1.firebasedatabase.app",
+            storageBucket: "vieclamtudo-7a146.firebasestorage.app",
+            appId: "1:659703475018:web:f1343a8e32cc030a092fb3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // NẠP NGÀNH NGHỀ & TỈNH THÀNH VÀO DROPDOWN
+        async function loadOptions() {
+            try {
+                const [jobsSnap, provsSnap] = await Promise.all([
+                    getDocs(collection(db, "jobs")),
+                    getDocs(collection(db, "provinces"))
+                ]);
+                
+                const jobSelect = document.getElementById('job_id');
+                const provSelect = document.getElementById('province_id');
+
+                jobsSnap.forEach(doc => {
+                    jobSelect.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
+                });
+                
+                provsSnap.forEach(doc => {
+                    provSelect.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
+                });
+            } catch (error) {
+                console.error("Lỗi tải danh mục:", error);
+            }
+        }
+
+        // THÊM DÒNG BẢNG GIÁ DỊCH VỤ
+        window.addServiceRow = () => {
+            const div = document.createElement('div');
+            div.className = "flex gap-2 service-item items-center";
+            div.innerHTML = `
+                <input type="text" placeholder="Tên dịch vụ (VD: Cắt tóc nam)" class="flex-[2] p-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 text-sm font-medium text-black s-title">
+                <input type="number" placeholder="Giá" class="flex-[1] p-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 text-sm font-bold text-blue-700 s-price">
+                <input type="text" placeholder="Đơn vị" class="w-20 p-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 text-sm font-medium text-black text-center s-unit" value="lần">
+                <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-red-500 p-2 transition"><i class="fa-solid fa-trash"></i></button>
+            `;
+            document.getElementById('serviceList').appendChild(div);
+        };
+
+        // XỬ LÝ GỬI FORM
+        document.getElementById('regForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG XỬ LÝ...';
+
+            // Thu thập bảng giá
+            const services = [];
+            document.querySelectorAll('.service-item').forEach(el => {
+                const title = el.querySelector('.s-title').value.trim();
+                const price = el.querySelector('.s-price').value.trim();
+                const unit = el.querySelector('.s-unit').value.trim();
+                if(title && price) {
+                    services.push({ title, price: Number(price), unit: unit || 'lần' });
+                }
+            });
+
+            // Gói dữ liệu gửi lên Firebase
+            const workerData = {
+                fullname: document.getElementById('fullname').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                birth: parseInt(document.getElementById('birth').value),
+                gender: document.getElementById('gender').value,
+                height: document.getElementById('height').value.trim(),
+                weight: document.getElementById('weight').value.trim(),
+                job_id: document.getElementById('job_id').value,
+                province_id: document.getElementById('province_id').value,
+                last_location: document.getElementById('last_location').value.trim(),
+                exp: document.getElementById('exp').value.trim(),
+                working_time: document.getElementById('working_time').value.trim(),
+                expected_salary: document.getElementById('expected_salary').value.trim(),
+                avatar: document.getElementById('avatar').value.trim(),
+                services: services,
+                is_verified: false, // MẶC ĐỊNH LÀ CHƯA XÁC MINH (Dấu tick mờ)
+                created_at: Date.now()
+            };
+
+            try {
+                // Ghi vào collection 'workers'
+                await addDoc(collection(db, "workers"), workerData);
+                alert("Đăng ký thành công! Tài khoản của bạn đang ở trạng thái 'Chưa xác minh'. Hệ thống sẽ chuyển hướng về Trang chủ.");
+                window.location.href = "index.html"; // Chuyển thẳng về trang chủ để xem kết quả
+            } catch (error) {
+                alert("Đã xảy ra lỗi khi đăng ký: " + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'HOÀN TẤT ĐĂNG KÝ';
+            }
+        };
+
+        // Khởi tạo ban đầu
+        addServiceRow(); // Thêm sẵn 1 dòng dịch vụ trống
+        loadOptions();
+    </script>
+</body>
+</html>
