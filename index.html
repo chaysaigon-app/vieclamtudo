@@ -184,7 +184,7 @@
             grid.innerHTML = data.map(w => {
                 const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
                 
-                // Ở LƯỚI TRANG CHỦ: CHỈ HIỆN KHI ĐÃ XÁC MINH. NẾU CHƯA THÌ ẨN HOÀN TOÀN ĐỂ ĐỠ RỐI MẮT
+                // Ở lưới trang chủ: Chỉ hiện người đã xác minh
                 const verifiedIcon = w.is_verified 
                     ? `<span class="inline-flex items-center gap-1 ml-2 px-2 py-0.5 bg-blue-50 border border-blue-200 text-blue-600 rounded text-[10px] font-bold cursor-pointer shrink-0" title="Đã xác minh" onclick="event.stopPropagation(); alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check"></i> Đã xác minh</span>` 
                     : ``;
@@ -230,26 +230,31 @@
             const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
             let servicesHtml = (w.services || []).map(s => `<div class="flex justify-between py-3 border-b border-gray-200 last:border-0"><span class="text-sm font-bold text-black">${s.title}</span><div class="text-right"><span class="text-sm font-black text-blue-700">${Number(s.price).toLocaleString()}đ</span><span class="text-xs text-black font-medium ml-1">/ ${s.unit || 'lần'}</span></div></div>`).join('') || '<p class="text-sm text-black font-medium italic">Chưa cập nhật bảng giá.</p>';
             
-            // HUY HIỆU GÓC TRÊN BÊN TRONG MODAL CHI TIẾT
-            const topCornerBadge = w.is_verified 
-                ? `<div class="absolute top-4 left-4 bg-blue-500/90 backdrop-blur text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md cursor-pointer z-10 border border-blue-400" onclick="alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check"></i> Đã xác minh</div>` 
-                : `<div class="absolute top-4 left-4 bg-gray-800/80 backdrop-blur text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md cursor-pointer z-10 border border-gray-600" onclick="alert('Đăng ký tạo hồ sơ là hoàn toàn miễn phí. Tuy nhiên, cấp dấu tick Xác minh là một dịch vụ trả phí.\\n\\nVui lòng liên hệ Admin để được hỗ trợ.')"><i class="fa-solid fa-circle-check text-gray-300"></i> Chưa xác minh</div>`;
+            // TẠO KHỐI HIỂN THỊ TRẠNG THÁI XÁC MINH RÕ RÀNG BÊN DƯỚI KHU VỰC
+            const verifyStatusHtml = w.is_verified 
+                ? `<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-sm font-black cursor-pointer shadow-sm" onclick="alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check text-blue-600 text-lg"></i> Tài khoản đã xác minh</div>` 
+                : `<div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-xl text-sm font-bold cursor-pointer shadow-sm hover:bg-gray-100 transition" onclick="alert('Đăng ký tạo hồ sơ là hoàn toàn miễn phí. Tuy nhiên, cấp dấu tick Xác minh là một dịch vụ trả phí.\\n\\nVui lòng liên hệ Admin để được hỗ trợ.')"><i class="fa-solid fa-circle-xmark text-gray-400 text-lg"></i> Chưa xác minh</div>`;
 
             document.getElementById('modalBody').innerHTML = `
                 <div class="flex flex-col md:flex-row gap-8 lg:gap-12 relative">
                     <div class="w-full md:w-[40%] flex-shrink-0 relative">
                         <div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden sticky top-0 shadow-inner border border-gray-200 relative">
-                            ${topCornerBadge} <img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="w-full h-full object-cover">
+                            <img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="w-full h-full object-cover">
                         </div>
                     </div>
                     <div class="w-full md:w-[60%] flex flex-col pb-4">
                         <div class="mb-6">
-                            <h2 class="text-3xl lg:text-4xl font-black text-black tracking-tight">${w.fullname}</h2>
-                            <div class="mt-3 flex items-center gap-2">
+                            <h2 class="text-3xl lg:text-4xl font-black text-black tracking-tight">
+                                ${w.fullname}
+                            </h2>
+                            <div class="mt-3 flex items-center gap-2 flex-wrap">
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg text-sm font-bold">
                                     <i class="fa-solid fa-map-location-dot"></i> ${provinceName}
                                 </span>
                                 <span class="text-sm text-black font-bold">${w.last_location || ''}</span>
+                            </div>
+                            <div class="mt-4">
+                                ${verifyStatusHtml}
                             </div>
                         </div>
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50 p-5 rounded-2xl mb-8 border border-gray-200"><div><p class="text-xs font-black text-black uppercase">Năm sinh</p><p class="text-base font-bold text-black mt-1">${w.birth || '--'}</p></div><div><p class="text-xs font-black text-black uppercase">Giới tính</p><p class="text-base font-bold text-black mt-1">${w.gender || '--'}</p></div><div><p class="text-xs font-black text-black uppercase">Chiều cao</p><p class="text-base font-bold text-black mt-1">${w.height || '--'}</p></div><div><p class="text-xs font-black text-black uppercase">Cân nặng</p><p class="text-base font-bold text-black mt-1">${w.weight || '--'}</p></div></div>
