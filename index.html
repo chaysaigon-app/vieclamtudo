@@ -44,7 +44,7 @@
                 <div class="flex flex-col md:flex-row gap-3 mb-6">
                     <div class="relative flex-1">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-black text-sm"></i>
-                        <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Tìm kiếm tên, kỹ năng..." 
+                        <input type="text" id="searchInput" onkeyup="filterData()" placeholder="Tìm kiếm tên, số điện thoại, kỹ năng, khu vực, dịch vụ..." 
                                class="w-full pl-10 pr-4 py-3 bg-white border border-blue-100 rounded-xl text-sm font-medium text-black focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition shadow-sm placeholder-gray-500">
                     </div>
                     <select id="jobSelect" onchange="handleDropdownChange('job')" class="py-3 px-4 bg-white border border-blue-100 rounded-xl text-sm font-semibold text-black outline-none appearance-none cursor-pointer focus:border-blue-500 shadow-sm hover:border-blue-300 transition">
@@ -74,7 +74,7 @@
             <div class="mb-8">
                 <h3 class="text-[11px] font-black text-black uppercase tracking-[0.2em] mb-4 border-l-2 border-blue-600 pl-3">Về Sàn Dịch Vụ Đa Ngành Nghề Toàn Quốc</h3>
                 <p class="text-[10px] text-black leading-loose text-justify font-normal">
-                    Đây là nền tảng trực tuyến kết nối trực tiếp khách hàng với các cá nhân cung cấp dịch vụ tự do trên toàn quốc, lấy con người làm trung tâm để tôn vinh năng lực của từng cá nhân cụ thể, đồng thời mở ra cơ hội gia tăng thu nhập linh hoạt cho sinh viên, nhân viên văn phòng và người làm bán thời gian. Sàn cung cấp không gian thông tin hoàn toàn miễn phí, không thu phí trung gian và không can thiệp vào bất kỳ giao dịch hay thỏa thuận thanh toán nào, trao toàn quyền thương lượng cho hai bên dựa trên tinh thần tự nguyện và tuân thủ pháp luật. Mỗi cá nhân cung cấp dịch vụ phải tự chịu trách nhiệm tuyệt đối về chất lượng và nội dung công việc của mình, trong khi khách hàng luôn được trao quyền giám sát thông qua tính năng báo cáo để hệ thống xử lý ngay lập tức những trường hợp vi phạm đạo đức nghề nghiệp hoặc cung cấp dịch vụ sai lệch, qua đó cùng nhau xây dựng một cộng đồng kết nối an toàn, minh bạch và hiệu quả.
+                    Đây là nền tảng trực tuyến kết nối trực tiếp khách hàng với các cá nhân cung cấp dịch vụ tự do trên toàn quốc, lấy con người làm trung tâm để tôn vinh năng lực của từng cá nhân cụ thể, đồng thời mở ra cơ hội gia gia tăng thu nhập linh hoạt cho sinh viên, nhân viên văn phòng và người làm bán thời gian. Sàn cung cấp không gian thông tin hoàn toàn miễn phí, không thu phí trung gian và không can thiệp vào bất kỳ giao dịch hay thỏa thuận thanh toán nào, trao toàn quyền thương lượng cho hai bên dựa trên tinh thần tự nguyện và tuân thủ pháp luật. Mỗi cá nhân cung cấp dịch vụ phải tự chịu trách nhiệm tuyệt đối về chất lượng và nội dung công việc của mình, trong khi khách hàng luôn được trao quyền giám sát thông qua tính năng báo cáo để hệ thống xử lý ngay lập tức những trường hợp vi phạm đạo đức nghề nghiệp hoặc cung cấp dịch vụ sai lệch, qua đó cùng nhau xây dựng một cộng đồng kết nối an toàn, minh bạch và hiệu quả.
                 </p>
             </div>
             <div class="pt-8 border-t border-blue-50 mb-8">
@@ -177,9 +177,38 @@
             provContainer.innerHTML = `<span class="text-xs font-bold text-black mr-2 shrink-0 w-16">Khu vực:</span>` + provHtml;
         }
 
+        // BỘ LỌC VẠN NĂNG: QUÉT TẤT CẢ THÔNG TIN CỦA THỢ
         window.filterData = () => {
-            const s = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = workers.filter(w => !w.is_hidden && (w.fullname + (w.exp || '')).toLowerCase().includes(s) && (currentJob ? w.job_id === currentJob : true) && (currentProvince ? w.province_id === currentProvince : true));
+            const s = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            const filtered = workers.filter(w => {
+                // 1. Bỏ qua các hồ sơ đang bị ẩn (chưa duyệt hoặc bị khóa)
+                if (w.is_hidden) return false;
+
+                // 2. Trích xuất tên của tất cả các dịch vụ trong bảng giá thành 1 chuỗi
+                const servicesText = w.services ? w.services.map(srv => srv.title).join(' ') : '';
+
+                // 3. Gom TẤT CẢ thông tin của thợ thành 1 chuỗi khổng lồ để quét
+                const omniString = `
+                    ${w.fullname || ''} 
+                    ${w.exp || ''} 
+                    ${w.phone || ''} 
+                    ${w.last_location || ''} 
+                    ${w.gender || ''} 
+                    ${w.height || ''} 
+                    ${w.weight || ''}
+                    ${servicesText}
+                `.toLowerCase();
+
+                // 4. Kiểm tra điều kiện lọc
+                const matchSearch = omniString.includes(s);
+                const matchJob = currentJob ? w.job_id === currentJob : true;
+                const matchProv = currentProvince ? w.province_id === currentProvince : true;
+
+                // Trả về true nếu thỏa mãn TẤT CẢ: Text tìm kiếm + Dropdown Ngành + Dropdown Tỉnh
+                return matchSearch && matchJob && matchProv;
+            });
+            
             render(filtered);
         };
 
@@ -190,7 +219,6 @@
             grid.innerHTML = data.map(w => {
                 const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
                 
-                // Ở lưới: Chỉ hiện tick xanh, người chưa có tick thì không hiện gì để gọn gàng
                 const verifiedIcon = w.is_verified 
                     ? `<span class="inline-flex items-center gap-1 ml-2 px-2 py-0.5 bg-blue-50 border border-blue-200 text-blue-600 rounded text-[10px] font-bold cursor-pointer shrink-0" title="Đã xác minh" onclick="event.stopPropagation(); alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check"></i> Đã xác minh</span>` 
                     : ``;
@@ -236,22 +264,14 @@
             const provinceName = allProvinces.find(p => p.id === w.province_id)?.name || "Toàn quốc";
             let servicesHtml = (w.services || []).map(s => `<div class="flex justify-between py-3 border-b border-gray-200 last:border-0"><span class="text-sm font-bold text-black">${s.title}</span><div class="text-right"><span class="text-sm font-black text-blue-700">${Number(s.price).toLocaleString()}đ</span><span class="text-xs text-black font-medium ml-1">/ ${s.unit || 'lần'}</span></div></div>`).join('') || '<p class="text-sm text-black font-medium italic">Chưa cập nhật bảng giá.</p>';
             
-            // Huy hiệu nổi ở góc trên (Tương tác bật Zalo)
-            const topCornerBadge = w.is_verified 
-                ? `<div class="absolute top-4 left-4 bg-blue-500/90 backdrop-blur text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md cursor-pointer z-10 border border-blue-400" onclick="alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check"></i> Đã xác minh</div>` 
-                : `<div class="absolute top-4 left-4 bg-gray-800/80 backdrop-blur text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md cursor-pointer z-10 border border-gray-600" onclick="alert('Tài khoản chưa được xác minh, vui lòng liên hệ Admin để được xác minh!'); window.open('https://zalo.me/0909108890', '_blank');"><i class="fa-solid fa-circle-check text-gray-300"></i> Chưa xác minh</div>`;
-
-            // Khối trạng thái ở dưới khu vực (Tương tác bật Zalo)
             const verifyStatusHtml = w.is_verified 
                 ? `<div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-sm font-black cursor-pointer shadow-sm" onclick="alert('Tài khoản này đã được Admin xác minh.')"><i class="fa-solid fa-circle-check text-blue-600 text-lg"></i> Tài khoản đã xác minh</div>` 
                 : `<div class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-xl text-sm font-bold cursor-pointer shadow-sm hover:bg-gray-100 transition" onclick="alert('Tài khoản chưa được xác minh, vui lòng liên hệ Admin để được xác minh!'); window.open('https://zalo.me/0909108890', '_blank');"><i class="fa-solid fa-circle-xmark text-gray-400 text-lg"></i> Chưa xác minh</div>`;
-
 
             document.getElementById('modalBody').innerHTML = `
                 <div class="flex flex-col md:flex-row gap-8 lg:gap-12 relative">
                     <div class="w-full md:w-[40%] flex-shrink-0 relative">
                         <div class="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden sticky top-0 shadow-inner border border-gray-200 relative">
-                            ${topCornerBadge}
                             <img src="${w.avatar || 'https://via.placeholder.com/900x1600'}" class="w-full h-full object-cover">
                         </div>
                     </div>
@@ -320,7 +340,6 @@
         window.openReportModal = (id) => { currentReportId = id; document.getElementById('reportModal').classList.remove('hidden'); };
         window.closeReportModal = () => { document.getElementById('reportModal').classList.add('hidden'); };
         
-        // HÀM BÁO CÁO CÓ KIỂM TRA ZALO/EMAIL
         window.submitReport = async (r) => { 
             const contactInput = document.getElementById('reporterContact');
             const contactInfo = contactInput.value.trim();
