@@ -48,8 +48,8 @@
                         <tr>
                             <th class="px-4 py-3 rounded-tl-lg">Đối tác</th>
                             <th class="px-4 py-3">Liên hệ</th>
-                            <th class="px-4 py-3">Trạng thái Xác minh</th>
-                            <th class="px-4 py-3">Trạng thái Hiển thị</th>
+                            <th class="px-4 py-3">Trạng thái (Xét duyệt/Ẩn hiện)</th>
+                            <th class="px-4 py-3">Cấp Tick Xác minh</th>
                             <th class="px-4 py-3 rounded-tr-lg">Hành động</th>
                         </tr>
                     </thead>
@@ -81,11 +81,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // ĐÃ BỔ SUNG addDoc
-        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getDatabase, ref, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Mật khẩu là admin@8899
+        // BẢO MẬT
         const pin = prompt("Nhập mã PIN quản trị viên để truy cập:");
         if (pin !== "admin@8899") { 
             alert("Sai mã PIN!");
@@ -111,40 +110,65 @@
 
         async function loadWorkers() {
             const workersSnap = await getDocs(collection(db, "workers"));
-            workersData = workersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            workersData = workersSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.created_at - a.created_at);
             
             const tbody = document.getElementById('workerTable');
             tbody.innerHTML = '';
 
             workersData.forEach(w => {
+                
+                // LOGIC 3 TRẠNG THÁI: CHỜ DUYỆT -> ĐANG HIỆN -> BỊ ẨN/KHÓA
+                let statusBadge = "";
+                let statusBtn = "";
+
+                if (w.is_hidden && !w.is_approved) {
+                    // Trạng thái 1: Mới đăng ký (Mặc định ẩn và chưa có cờ approved)
+                    statusBadge = `<span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-md text-[11px] font-black border border-orange-200"><i class="fa-solid fa-clock"></i> CHỜ DUYỆT</span>`;
+                    statusBtn = `<button onclick="approveWorker('${w.id}')" class="bg-green-600 text-white hover:bg-green-700 text-xs font-black px-4 py-2 rounded-lg shadow-md transition w-full text-center mb-2"><i class="fa-solid fa-check"></i> DUYỆT & HIỆN</button>`;
+                } else if (!w.is_hidden) {
+                    // Trạng thái 2: Đang hiển thị bình thường
+                    statusBadge = `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-[11px] font-black border border-green-200"><i class="fa-solid fa-eye"></i> Đang hiện</span>`;
+                    statusBtn = `<button onclick="hideWorker('${w.id}')" class="text-red-500 hover:text-red-700 text-xs font-bold block w-full text-left mb-2 transition"><i class="fa-solid fa-eye-slash"></i> Ẩn / Khóa hồ sơ</button>`;
+                } else {
+                    // Trạng thái 3: Đã duyệt nhưng bị Admin phạt Ẩn/Khóa
+                    statusBadge = `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-md text-[11px] font-black border border-red-200"><i class="fa-solid fa-lock"></i> ĐÃ BỊ KHÓA ẨN</span>`;
+                    statusBtn = `<button onclick="showWorker('${w.id}')" class="text-green-600 hover:text-green-800 text-xs font-bold block w-full text-left mb-2 transition"><i class="fa-solid fa-unlock"></i> Mở khóa (Cho hiện lại)</button>`;
+                }
+
+
+                // GIAO DIỆN TICK XÁC MINH
                 const verifyBadge = w.is_verified 
-                    ? `<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs font-bold"><i class="fa-solid fa-check-circle"></i> Đã xác minh</span>`
-                    : `<span class="px-2 py-1 bg-gray-100 text-gray-500 rounded-md text-xs font-bold">Chưa xác minh</span>`;
+                    ? `<span class="text-blue-600 font-bold text-xs"><i class="fa-solid fa-circle-check"></i> Đã cấp tick</span>`
+                    : `<span class="text-gray-400 font-bold text-xs">Chưa có tick</span>`;
                 
                 const verifyBtn = w.is_verified
-                    ? `<button onclick="toggleVerify('${w.id}', true)" class="text-orange-500 hover:text-orange-700 text-xs font-bold"><i class="fa-solid fa-xmark-circle"></i> Bỏ xác minh</button>`
-                    : `<button onclick="toggleVerify('${w.id}', false)" class="text-blue-600 hover:text-blue-800 text-xs font-bold"><i class="fa-solid fa-check"></i> Xác minh ngay</button>`;
+                    ? `<button onclick="toggleVerify('${w.id}', true)" class="text-orange-500 hover:text-orange-700 text-xs font-bold block mt-1"><i class="fa-solid fa-xmark-circle"></i> Bỏ tick</button>`
+                    : `<button onclick="toggleVerify('${w.id}', false)" class="text-blue-600 hover:text-blue-800 text-xs font-bold block mt-1"><i class="fa-solid fa-check"></i> Cấp tick xanh</button>`;
 
-                const visibleBadge = w.is_hidden
-                    ? `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-md text-xs font-bold"><i class="fa-solid fa-eye-slash"></i> Đang Ẩn</span>`
-                    : `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-bold"><i class="fa-solid fa-eye"></i> Đang Hiện</span>`;
-
-                const visibleBtn = w.is_hidden
-                    ? `<button onclick="toggleVisibility('${w.id}', true)" class="text-green-600 hover:text-green-800 text-xs font-bold mt-2 block"><i class="fa-solid fa-eye"></i> Cho Hiện Lại</button>`
-                    : `<button onclick="toggleVisibility('${w.id}', false)" class="text-red-500 hover:text-red-700 text-xs font-bold mt-2 block"><i class="fa-solid fa-eye-slash"></i> Ẩn Hồ Sơ</button>`;
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-4 flex items-center gap-3">
-                            <img src="${w.avatar || 'https://via.placeholder.com/150'}" class="w-10 h-10 rounded-full object-cover border border-gray-200">
-                            <span class="font-black text-black">${w.fullname}</span>
+                    <tr class="hover:bg-blue-50/50 transition border-b border-gray-100">
+                        <td class="px-4 py-4">
+                            <div class="flex items-center gap-3">
+                                <img src="${w.avatar || 'https://via.placeholder.com/150'}" class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm">
+                                <div>
+                                    <span class="font-black text-black block">${w.fullname}</span>
+                                    <span class="text-[10px] text-gray-500">${w.email || 'Không có email'}</span>
+                                </div>
+                            </div>
                         </td>
-                        <td class="px-4 py-4 font-bold text-gray-700">${w.phone}</td>
-                        <td class="px-4 py-4">${verifyBadge}</td>
-                        <td class="px-4 py-4">${visibleBadge}</td>
-                        <td class="px-4 py-4 bg-gray-50/50">
+                        <td class="px-4 py-4 font-bold text-gray-700">
+                            ${w.phone}
+                        </td>
+                        <td class="px-4 py-4">
+                            ${statusBadge}
+                        </td>
+                        <td class="px-4 py-4 bg-gray-50/30 border-l border-gray-100">
+                            ${verifyBadge}
                             ${verifyBtn}
-                            ${visibleBtn}
+                        </td>
+                        <td class="px-4 py-4 border-l border-gray-100">
+                            ${statusBtn}
                         </td>
                     </tr>
                 `;
@@ -181,7 +205,7 @@
                             : `<button onclick="toggleReviewVisibility('${workerId}', '${reviewId}', false)" class="text-orange-500 hover:text-orange-700 text-xs font-bold mr-3"><i class="fa-solid fa-eye-slash"></i> Ẩn</button>`;
 
                         tbody.innerHTML += `
-                            <tr class="hover:bg-gray-50 transition">
+                            <tr class="hover:bg-gray-50 transition border-b border-gray-50">
                                 <td class="px-4 py-4 font-bold text-blue-800 text-xs">${workerName}</td>
                                 <td class="px-4 py-4">
                                     <p class="text-sm font-medium text-black">${r.text}</p>
@@ -199,31 +223,64 @@
             });
         }
 
-        // ĐÃ SỬA: TỰ ĐỘNG GỬI EMAIL KHI XÁC MINH
-        window.toggleVerify = async (id, currentStatus) => {
+        // --- 3 HÀM XỬ LÝ TRẠNG THÁI HIỂN THỊ CHUYÊN NGHIỆP ---
+
+        // 1. Duyệt tài khoản mới đăng ký
+        window.approveWorker = async (id) => {
             try {
-                await updateDoc(doc(db, "workers", id), { is_verified: !currentStatus });
+                // Đánh dấu là đã duyệt (is_approved: true) và cho phép hiển thị (is_hidden: false)
+                await updateDoc(doc(db, "workers", id), { is_hidden: false, is_approved: true });
                 
-                // Gửi email
                 const w = workersData.find(x => x.id === id);
                 if (w && w.email) {
-                    const statusText = !currentStatus ? "ĐÃ ĐƯỢC XÁC MINH (Tick Xanh)" : "ĐÃ BỊ HỦY XÁC MINH";
                     try {
                         await addDoc(collection(db, "mail"), {
-                            to: [w.email, "chaysaigon@gmail.com"],
-                            message: { subject: `✔️ SÀN DỊCH VỤ: Cập nhật trạng thái Xác minh`, html: `<p>Chào ${w.fullname},</p><p>Hồ sơ của bạn trên hệ thống hiện <b>${statusText}</b>.</p>` }
+                            to: [w.email],
+                            message: { 
+                                subject: `🎉 SÀN DỊCH VỤ: Hồ sơ của bạn đã được duyệt!`, 
+                                html: `<p>Chào ${w.fullname},</p><p>Hồ sơ năng lực của bạn đã được Admin phê duyệt và hiện đang hiển thị công khai trên hệ thống Sàn Dịch Vụ.</p><p>Chúc bạn có thêm nhiều khách hàng mới!</p>` 
+                            }
                         });
-                    } catch (e) { console.error("Lỗi gửi mail:", e); }
+                    } catch (e) { console.error("Lỗi gửi mail duyệt:", e); }
                 }
-                
                 loadWorkers();
             } catch (e) { alert("Lỗi: " + e); }
         };
 
-        window.toggleVisibility = async (id, currentStatus) => {
+        // 2. Ẩn / Khóa tài khoản đang hiển thị (khi bị Report)
+        window.hideWorker = async (id) => {
+            if(confirm("Bạn có chắc muốn ẨN/KHÓA hồ sơ này khỏi trang chủ?")) {
+                try {
+                    await updateDoc(doc(db, "workers", id), { is_hidden: true });
+                    loadWorkers();
+                } catch (e) { alert("Lỗi: " + e); }
+            }
+        };
+
+        // 3. Mở khóa lại tài khoản đã bị phạt ẩn
+        window.showWorker = async (id) => {
             try {
-                await updateDoc(doc(db, "workers", id), { is_hidden: !currentStatus });
+                await updateDoc(doc(db, "workers", id), { is_hidden: false });
                 loadWorkers();
+            } catch (e) { alert("Lỗi: " + e); }
+        };
+
+
+        // --- XỬ LÝ XÁC MINH ---
+        window.toggleVerify = async (id, currentStatus) => {
+            try {
+                await updateDoc(doc(db, "workers", id), { is_verified: !currentStatus });
+                const w = workersData.find(x => x.id === id);
+                if (w && w.email) {
+                    const statusText = !currentStatus ? "ĐÃ ĐƯỢC XÁC MINH (Cấp Tick Xanh)" : "ĐÃ BỊ HỦY XÁC MINH";
+                    try {
+                        await addDoc(collection(db, "mail"), {
+                            to: [w.email, "chaysaigon@gmail.com"],
+                            message: { subject: `✔️ SÀN DỊCH VỤ: Cập nhật trạng thái Xác minh`, html: `<p>Chào ${w.fullname},</p><p>Tài khoản của bạn trên hệ thống hiện <b>${statusText}</b>.</p>` }
+                        });
+                    } catch (e) { console.error("Lỗi gửi mail xác minh:", e); }
+                }
+                loadWorkers(); 
             } catch (e) { alert("Lỗi: " + e); }
         };
 
