@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản Trị Sàn Dịch Vụ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background-color: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="text-black hidden" id="adminBody">
+
+    <header class="bg-blue-900 text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-shield-halved text-xl text-blue-300"></i>
+                <h1 class="text-lg font-black tracking-widest uppercase">Hệ Thống Quản Trị Sàn</h1>
+            </div>
+            <a href="index.html" target="_blank" class="text-sm font-bold bg-blue-800 px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Xem trang chủ
+            </a>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-5 py-8 flex flex-col md:flex-row gap-8">
+        
+        <aside class="w-full md:w-64 flex-shrink-0 space-y-2">
+            <button onclick="switchTab('workers')" id="btn-workers" class="w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-blue-600 text-white shadow-md">
+                <i class="fa-solid fa-users-gear w-6"></i> 1. Quản lý Đối tác
+            </button>
+            <button onclick="switchTab('reviews')" id="btn-reviews" class="w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200">
+                <i class="fa-solid fa-comments w-6"></i> 2. Quản lý Đánh giá
+            </button>
+        </aside>
+
+        <main class="flex-1 bg-white border border-gray-200 rounded-3xl shadow-sm p-6 overflow-hidden">
+            
+            <div id="tab-workers" class="block overflow-x-auto custom-scroll">
+                <h2 class="text-xl font-black text-black mb-6 border-b-2 border-blue-100 pb-3">Danh sách Đối tác đăng ký</h2>
+                <table class="min-w-full text-left text-sm">
+                    <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-[11px]">
+                        <tr>
+                            <th class="px-4 py-3 rounded-tl-lg">Đối tác</th>
+                            <th class="px-4 py-3">Liên hệ</th>
+                            <th class="px-4 py-3">Trạng thái Xác minh</th>
+                            <th class="px-4 py-3">Trạng thái Hiển thị</th>
+                            <th class="px-4 py-3 rounded-tr-lg">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workerTable" class="divide-y divide-gray-100">
+                        <tr><td colspan="5" class="text-center py-10 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="tab-reviews" class="hidden overflow-x-auto custom-scroll">
+                <h2 class="text-xl font-black text-black mb-6 border-b-2 border-blue-100 pb-3">Kiểm duyệt Nhận xét</h2>
+                <table class="min-w-full text-left text-sm">
+                    <thead class="bg-gray-50 text-gray-500 font-bold uppercase text-[11px]">
+                        <tr>
+                            <th class="px-4 py-3 rounded-tl-lg w-1/4">Thợ được nhận xét</th>
+                            <th class="px-4 py-3 w-2/4">Nội dung đánh giá</th>
+                            <th class="px-4 py-3">Trạng thái</th>
+                            <th class="px-4 py-3 rounded-tr-lg">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviewTable" class="divide-y divide-gray-100">
+                        <tr><td colspan="4" class="text-center py-10 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // BẢO MẬT ĐƠN GIẢN (Ngăn người lạ bấm nhầm)
+        const pin = prompt("Nhập mã PIN quản trị viên để truy cập:");
+        if (pin !== "admin@8899") { // ĐÃ ĐỔI MẬT KHẨU THEO YÊU CẦU
+            alert("Sai mã PIN!");
+            window.location.href = "index.html";
+        } else {
+            document.getElementById('adminBody').classList.remove('hidden');
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
+            authDomain: "vieclamtudo-7a146.firebaseapp.com",
+            projectId: "vieclamtudo-7a146",
+            databaseURL: "https://vieclamtudo-7a146-default-rtdb.asia-southeast1.firebasedatabase.app",
+            storageBucket: "vieclamtudo-7a146.firebasestorage.app",
+            appId: "1:659703475018:web:f1343a8e32cc030a092fb3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        let workersData = [];
+
+        // LOAD DỮ LIỆU ĐỐI TÁC
+        async function loadWorkers() {
+            const workersSnap = await getDocs(collection(db, "workers"));
+            workersData = workersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            const tbody = document.getElementById('workerTable');
+            tbody.innerHTML = '';
+
+            workersData.forEach(w => {
+                // Label Xác minh
+                const verifyBadge = w.is_verified 
+                    ? `<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs font-bold"><i class="fa-solid fa-check-circle"></i> Đã xác minh</span>`
+                    : `<span class="px-2 py-1 bg-gray-100 text-gray-500 rounded-md text-xs font-bold">Chưa xác minh</span>`;
+                
+                const verifyBtn = w.is_verified
+                    ? `<button onclick="toggleVerify('${w.id}', true)" class="text-orange-500 hover:text-orange-700 text-xs font-bold"><i class="fa-solid fa-xmark-circle"></i> Bỏ xác minh</button>`
+                    : `<button onclick="toggleVerify('${w.id}', false)" class="text-blue-600 hover:text-blue-800 text-xs font-bold"><i class="fa-solid fa-check"></i> Xác minh ngay</button>`;
+
+                // Label Ẩn/Hiện
+                const visibleBadge = w.is_hidden
+                    ? `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-md text-xs font-bold"><i class="fa-solid fa-eye-slash"></i> Đang Ẩn</span>`
+                    : `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-bold"><i class="fa-solid fa-eye"></i> Đang Hiện</span>`;
+
+                const visibleBtn = w.is_hidden
+                    ? `<button onclick="toggleVisibility('${w.id}', true)" class="text-green-600 hover:text-green-800 text-xs font-bold mt-2 block"><i class="fa-solid fa-eye"></i> Cho Hiện Lại</button>`
+                    : `<button onclick="toggleVisibility('${w.id}', false)" class="text-red-500 hover:text-red-700 text-xs font-bold mt-2 block"><i class="fa-solid fa-eye-slash"></i> Ẩn Hồ Sơ</button>`;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-4 py-4 flex items-center gap-3">
+                            <img src="${w.avatar || 'https://via.placeholder.com/150'}" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                            <span class="font-black text-black">${w.fullname}</span>
+                        </td>
+                        <td class="px-4 py-4 font-bold text-gray-700">${w.phone}</td>
+                        <td class="px-4 py-4">${verifyBadge}</td>
+                        <td class="px-4 py-4">${visibleBadge}</td>
+                        <td class="px-4 py-4 bg-gray-50/50">
+                            ${verifyBtn}
+                            ${visibleBtn}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Sau khi load xong thợ thì mới load được review (để lấy tên thợ)
+            loadReviews();
+        }
+
+        // LOAD DỮ LIỆU ĐÁNH GIÁ TỪ REALTIME DB
+        async function loadReviews() {
+            const reviewsRef = ref(rtdb, 'reviews');
+            onValue(reviewsRef, (snapshot) => {
+                const data = snapshot.val();
+                const tbody = document.getElementById('reviewTable');
+                tbody.innerHTML = '';
+
+                if (!data) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-5 text-gray-500">Chưa có đánh giá nào.</td></tr>';
+                    return;
+                }
+
+                // Duyệt qua từng thợ (workerId)
+                Object.keys(data).forEach(workerId => {
+                    const workerName = workersData.find(x => x.id === workerId)?.fullname || "Thợ đã bị xóa";
+                    const workerReviews = data[workerId];
+
+                    // Duyệt qua từng đánh giá của thợ đó
+                    Object.keys(workerReviews).forEach(reviewId => {
+                        const r = workerReviews[reviewId];
+                        
+                        const rBadge = r.is_hidden 
+                            ? `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-md text-[10px] font-bold">Đã Ẩn</span>`
+                            : `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-[10px] font-bold">Đang Hiện</span>`;
+
+                        const toggleBtn = r.is_hidden
+                            ? `<button onclick="toggleReviewVisibility('${workerId}', '${reviewId}', true)" class="text-green-600 hover:text-green-800 text-xs font-bold mr-3"><i class="fa-solid fa-eye"></i> Hiện</button>`
+                            : `<button onclick="toggleReviewVisibility('${workerId}', '${reviewId}', false)" class="text-orange-500 hover:text-orange-700 text-xs font-bold mr-3"><i class="fa-solid fa-eye-slash"></i> Ẩn</button>`;
+
+                        tbody.innerHTML += `
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-4 py-4 font-bold text-blue-800 text-xs">${workerName}</td>
+                                <td class="px-4 py-4">
+                                    <p class="text-sm font-medium text-black">${r.text}</p>
+                                    <p class="text-[10px] text-gray-400 mt-1">${new Date(r.timestamp).toLocaleString('vi-VN')}</p>
+                                </td>
+                                <td class="px-4 py-4">${rBadge}</td>
+                                <td class="px-4 py-4 bg-gray-50/50">
+                                    ${toggleBtn}
+                                    <button onclick="deleteReview('${workerId}', '${reviewId}')" class="text-red-600 hover:text-red-800 text-xs font-bold"><i class="fa-solid fa-trash"></i> Xóa hẳn</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                });
+            });
+        }
+
+        // --- CÁC HÀM XỬ LÝ (ACTION) ---
+
+        // Đổi trạng thái Xác minh
+        window.toggleVerify = async (id, currentStatus) => {
+            try {
+                await updateDoc(doc(db, "workers", id), { is_verified: !currentStatus });
+                loadWorkers(); // Load lại bảng
+            } catch (e) { alert("Lỗi: " + e); }
+        };
+
+        // Đổi trạng thái Ẩn/Hiện hồ sơ
+        window.toggleVisibility = async (id, currentStatus) => {
+            try {
+                await updateDoc(doc(db, "workers", id), { is_hidden: !currentStatus });
+                loadWorkers();
+            } catch (e) { alert("Lỗi: " + e); }
+        };
+
+        // Đổi trạng thái Ẩn/Hiện đánh giá
+        window.toggleReviewVisibility = async (workerId, reviewId, currentStatus) => {
+            try {
+                await update(ref(rtdb, `reviews/${workerId}/${reviewId}`), { is_hidden: !currentStatus });
+                // Không cần load lại vì onValue ở hàm loadReviews sẽ tự cập nhật realtime
+            } catch (e) { alert("Lỗi: " + e); }
+        };
+
+        // Xóa hẳn đánh giá
+        window.deleteReview = async (workerId, reviewId) => {
+            if(confirm("Hành động này sẽ XÓA VĨNH VIỄN đánh giá này. Bạn có chắc chắn?")) {
+                try {
+                    await remove(ref(rtdb, `reviews/${workerId}/${reviewId}`));
+                } catch (e) { alert("Lỗi: " + e); }
+            }
+        };
+
+        // CHUYỂN TAB UI
+        window.switchTab = (tabName) => {
+            document.getElementById('tab-workers').classList.add('hidden');
+            document.getElementById('tab-reviews').classList.add('hidden');
+            document.getElementById('btn-workers').className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 border border-gray-200";
+            document.getElementById('btn-reviews').className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 border border-gray-200";
+            
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            document.getElementById('btn-' + tabName).className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-blue-600 text-white shadow-md";
+        };
+
+        // Khởi chạy khi vào trang
+        loadWorkers();
+    </script>
+</body>
+</html>
