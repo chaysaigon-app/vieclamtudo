@@ -81,12 +81,13 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // ĐÃ BỔ SUNG addDoc
+        import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getDatabase, ref, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // BẢO MẬT ĐƠN GIẢN (Ngăn người lạ bấm nhầm)
+        // Mật khẩu là admin@8899
         const pin = prompt("Nhập mã PIN quản trị viên để truy cập:");
-        if (pin !== "admin@8899") { // ĐÃ ĐỔI MẬT KHẨU THEO YÊU CẦU
+        if (pin !== "admin@8899") { 
             alert("Sai mã PIN!");
             window.location.href = "index.html";
         } else {
@@ -108,7 +109,6 @@
 
         let workersData = [];
 
-        // LOAD DỮ LIỆU ĐỐI TÁC
         async function loadWorkers() {
             const workersSnap = await getDocs(collection(db, "workers"));
             workersData = workersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -117,7 +117,6 @@
             tbody.innerHTML = '';
 
             workersData.forEach(w => {
-                // Label Xác minh
                 const verifyBadge = w.is_verified 
                     ? `<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs font-bold"><i class="fa-solid fa-check-circle"></i> Đã xác minh</span>`
                     : `<span class="px-2 py-1 bg-gray-100 text-gray-500 rounded-md text-xs font-bold">Chưa xác minh</span>`;
@@ -126,7 +125,6 @@
                     ? `<button onclick="toggleVerify('${w.id}', true)" class="text-orange-500 hover:text-orange-700 text-xs font-bold"><i class="fa-solid fa-xmark-circle"></i> Bỏ xác minh</button>`
                     : `<button onclick="toggleVerify('${w.id}', false)" class="text-blue-600 hover:text-blue-800 text-xs font-bold"><i class="fa-solid fa-check"></i> Xác minh ngay</button>`;
 
-                // Label Ẩn/Hiện
                 const visibleBadge = w.is_hidden
                     ? `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-md text-xs font-bold"><i class="fa-solid fa-eye-slash"></i> Đang Ẩn</span>`
                     : `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-bold"><i class="fa-solid fa-eye"></i> Đang Hiện</span>`;
@@ -152,11 +150,9 @@
                 `;
             });
 
-            // Sau khi load xong thợ thì mới load được review (để lấy tên thợ)
             loadReviews();
         }
 
-        // LOAD DỮ LIỆU ĐÁNH GIÁ TỪ REALTIME DB
         async function loadReviews() {
             const reviewsRef = ref(rtdb, 'reviews');
             onValue(reviewsRef, (snapshot) => {
@@ -169,12 +165,10 @@
                     return;
                 }
 
-                // Duyệt qua từng thợ (workerId)
                 Object.keys(data).forEach(workerId => {
                     const workerName = workersData.find(x => x.id === workerId)?.fullname || "Thợ đã bị xóa";
                     const workerReviews = data[workerId];
 
-                    // Duyệt qua từng đánh giá của thợ đó
                     Object.keys(workerReviews).forEach(reviewId => {
                         const r = workerReviews[reviewId];
                         
@@ -205,17 +199,27 @@
             });
         }
 
-        // --- CÁC HÀM XỬ LÝ (ACTION) ---
-
-        // Đổi trạng thái Xác minh
+        // ĐÃ SỬA: TỰ ĐỘNG GỬI EMAIL KHI XÁC MINH
         window.toggleVerify = async (id, currentStatus) => {
             try {
                 await updateDoc(doc(db, "workers", id), { is_verified: !currentStatus });
-                loadWorkers(); // Load lại bảng
+                
+                // Gửi email
+                const w = workersData.find(x => x.id === id);
+                if (w && w.email) {
+                    const statusText = !currentStatus ? "ĐÃ ĐƯỢC XÁC MINH (Tick Xanh)" : "ĐÃ BỊ HỦY XÁC MINH";
+                    try {
+                        await addDoc(collection(db, "mail"), {
+                            to: [w.email, "chaysaigon@gmail.com"],
+                            message: { subject: `✔️ SÀN DỊCH VỤ: Cập nhật trạng thái Xác minh`, html: `<p>Chào ${w.fullname},</p><p>Hồ sơ của bạn trên hệ thống hiện <b>${statusText}</b>.</p>` }
+                        });
+                    } catch (e) { console.error("Lỗi gửi mail:", e); }
+                }
+                
+                loadWorkers();
             } catch (e) { alert("Lỗi: " + e); }
         };
 
-        // Đổi trạng thái Ẩn/Hiện hồ sơ
         window.toggleVisibility = async (id, currentStatus) => {
             try {
                 await updateDoc(doc(db, "workers", id), { is_hidden: !currentStatus });
@@ -223,15 +227,12 @@
             } catch (e) { alert("Lỗi: " + e); }
         };
 
-        // Đổi trạng thái Ẩn/Hiện đánh giá
         window.toggleReviewVisibility = async (workerId, reviewId, currentStatus) => {
             try {
                 await update(ref(rtdb, `reviews/${workerId}/${reviewId}`), { is_hidden: !currentStatus });
-                // Không cần load lại vì onValue ở hàm loadReviews sẽ tự cập nhật realtime
             } catch (e) { alert("Lỗi: " + e); }
         };
 
-        // Xóa hẳn đánh giá
         window.deleteReview = async (workerId, reviewId) => {
             if(confirm("Hành động này sẽ XÓA VĨNH VIỄN đánh giá này. Bạn có chắc chắn?")) {
                 try {
@@ -240,7 +241,6 @@
             }
         };
 
-        // CHUYỂN TAB UI
         window.switchTab = (tabName) => {
             document.getElementById('tab-workers').classList.add('hidden');
             document.getElementById('tab-reviews').classList.add('hidden');
@@ -251,7 +251,6 @@
             document.getElementById('btn-' + tabName).className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-blue-600 text-white shadow-md";
         };
 
-        // Khởi chạy khi vào trang
         loadWorkers();
     </script>
 </body>
