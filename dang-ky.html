@@ -23,7 +23,7 @@
     <main class="max-w-3xl mx-auto px-5 mt-10">
         <div class="mb-8">
             <h2 class="text-2xl font-black text-black mb-2">Tạo hồ sơ năng lực miễn phí</h2>
-            <p class="text-sm font-medium text-gray-700">Điền đầy đủ thông tin để khách hàng dễ dàng tìm thấy và tin tưởng lựa chọn bạn. Hồ sơ mới sẽ ở trạng thái "Chưa xác minh".</p>
+            <p class="text-sm font-medium text-gray-700">Điền đầy đủ thông tin để khách hàng dễ dàng tìm thấy và tin tưởng lựa chọn bạn. Sau khi đăng ký, hồ sơ sẽ được Admin xét duyệt trước khi hiển thị.</p>
         </div>
 
         <form id="regForm" class="space-y-8 bg-white p-6 md:p-10 rounded-3xl shadow-lg border border-blue-50">
@@ -163,7 +163,7 @@
             const workerData = {
                 fullname: document.getElementById('fullname').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
-                email: document.getElementById('email').value.trim(), // Lấy Email
+                email: document.getElementById('email').value.trim(),
                 birth: parseInt(document.getElementById('birth').value),
                 gender: document.getElementById('gender').value,
                 height: document.getElementById('height').value.trim(),
@@ -177,34 +177,32 @@
                 avatar: document.getElementById('avatar').value.trim(),
                 services: services,
                 is_verified: false,
+                is_hidden: true, // MẶC ĐỊNH LÀ ẨN CHỜ DUYỆT
                 created_at: Date.now()
             };
 
             try {
-                // 1. Lưu hồ sơ vào bảng workers
                 await addDoc(collection(db, "workers"), workerData);
 
-                // 2. Tạo lệnh gửi Email cho Admin
                 await addDoc(collection(db, "mail"), {
                     to: ["chaysaigon@gmail.com"],
                     message: {
                         subject: "🔔 CÓ ĐỐI TÁC MỚI ĐĂNG KÝ: " + workerData.fullname,
-                        html: `<p>Đối tác <b>${workerData.fullname}</b> vừa đăng ký lên sàn.</p><p>SĐT: ${workerData.phone}</p><p>Email: ${workerData.email}</p><p>Khu vực: ${workerData.last_location}</p><p>Bạn hãy vào trang Admin để kiểm duyệt.</p>`
+                        html: `<p>Đối tác <b>${workerData.fullname}</b> vừa đăng ký lên sàn.</p><p>SĐT: ${workerData.phone}</p><p>Email: ${workerData.email}</p><p>Khu vực: ${workerData.last_location}</p><p>Hồ sơ đang ở trạng thái <b>ĐÃ ẨN</b>. Bạn hãy vào trang Admin để kiểm duyệt, cho phép hiện và xác minh.</p>`
                     }
                 });
 
-                // 3. Tạo lệnh gửi Email cho Đối tác
                 await addDoc(collection(db, "mail"), {
                     to: [workerData.email],
                     message: {
                         subject: "Chào mừng bạn đến với Sàn Dịch Vụ Đa Ngành Nghề",
-                        html: `<p>Chào ${workerData.fullname},</p><p>Cảm ơn bạn đã đăng ký hồ sơ năng lực.</p><p>Tài khoản của bạn hiện đang ở trạng thái chưa xác minh. Vui lòng liên hệ Admin qua Zalo: 0909108890 để được hỗ trợ kích hoạt sớm nhất!</p>`
+                        html: `<p>Chào ${workerData.fullname},</p><p>Cảm ơn bạn đã đăng ký hồ sơ năng lực.</p><p>Tài khoản của bạn đang được duyệt và chờ xác minh. Vui lòng liên hệ Admin qua Zalo: 0909108890 để được hỗ trợ kích hoạt sớm nhất!</p>`
                     }
                 });
 
-                // 4. Thông báo và chuyển hướng (Đúng yêu cầu của bạn)
-                alert("Đăng ký thành công, vui lòng liên hệ admin để kích hoạt tài khoản của bạn.");
-                window.location.href = "index.html"; 
+                // ĐÃ SỬA: CHUYỂN THẲNG QUA ZALO ADMIN KHI BẤM OK
+                alert("Đăng ký thành công! Vui lòng liên hệ Admin để được xét duyệt và kích hoạt tài khoản của bạn.");
+                window.location.href = "https://zalo.me/0909108890"; 
             } catch (error) {
                 alert("Đã xảy ra lỗi khi đăng ký: " + error.message);
                 submitBtn.disabled = false;
