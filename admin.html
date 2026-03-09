@@ -37,6 +37,9 @@
             <button onclick="switchTab('reviews')" id="btn-reviews" class="w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200">
                 <i class="fa-solid fa-comments w-6"></i> 2. Quản lý Đánh giá
             </button>
+            <button onclick="switchTab('reports')" id="btn-reports" class="w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200">
+                <i class="fa-solid fa-flag w-6 text-red-500"></i> 3. Quản lý Báo cáo
+            </button>
         </aside>
 
         <main class="flex-1 bg-white border border-gray-200 rounded-3xl shadow-sm p-6 overflow-hidden">
@@ -71,6 +74,23 @@
                         </tr>
                     </thead>
                     <tbody id="reviewTable" class="divide-y divide-gray-100">
+                        <tr><td colspan="4" class="text-center py-10 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="tab-reports" class="hidden overflow-x-auto custom-scroll">
+                <h2 class="text-xl font-black text-red-600 mb-6 border-b-2 border-red-100 pb-3"><i class="fa-solid fa-triangle-exclamation"></i> Danh sách Vi phạm bị Báo cáo</h2>
+                <table class="min-w-full text-left text-sm">
+                    <thead class="bg-red-50 text-red-600 font-bold uppercase text-[11px]">
+                        <tr>
+                            <th class="px-4 py-3 rounded-tl-lg w-1/4">Thợ bị báo cáo</th>
+                            <th class="px-4 py-3 w-1/3">Lý do & Thông tin LH</th>
+                            <th class="px-4 py-3">Trạng thái tài khoản</th>
+                            <th class="px-4 py-3 rounded-tr-lg">Xử lý vi phạm</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTable" class="divide-y divide-gray-100">
                         <tr><td colspan="4" class="text-center py-10 text-gray-500"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</td></tr>
                     </tbody>
                 </table>
@@ -117,26 +137,20 @@
 
             workersData.forEach(w => {
                 
-                // LOGIC 3 TRẠNG THÁI: CHỜ DUYỆT -> ĐANG HIỆN -> BỊ ẨN/KHÓA
                 let statusBadge = "";
                 let statusBtn = "";
 
                 if (w.is_hidden && !w.is_approved) {
-                    // Trạng thái 1: Mới đăng ký (Mặc định ẩn và chưa có cờ approved)
                     statusBadge = `<span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-md text-[11px] font-black border border-orange-200"><i class="fa-solid fa-clock"></i> CHỜ DUYỆT</span>`;
                     statusBtn = `<button onclick="approveWorker('${w.id}')" class="bg-green-600 text-white hover:bg-green-700 text-xs font-black px-4 py-2 rounded-lg shadow-md transition w-full text-center mb-2"><i class="fa-solid fa-check"></i> DUYỆT & HIỆN</button>`;
                 } else if (!w.is_hidden) {
-                    // Trạng thái 2: Đang hiển thị bình thường
                     statusBadge = `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-[11px] font-black border border-green-200"><i class="fa-solid fa-eye"></i> Đang hiện</span>`;
                     statusBtn = `<button onclick="hideWorker('${w.id}')" class="text-red-500 hover:text-red-700 text-xs font-bold block w-full text-left mb-2 transition"><i class="fa-solid fa-eye-slash"></i> Ẩn / Khóa hồ sơ</button>`;
                 } else {
-                    // Trạng thái 3: Đã duyệt nhưng bị Admin phạt Ẩn/Khóa
                     statusBadge = `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-md text-[11px] font-black border border-red-200"><i class="fa-solid fa-lock"></i> ĐÃ BỊ KHÓA ẨN</span>`;
                     statusBtn = `<button onclick="showWorker('${w.id}')" class="text-green-600 hover:text-green-800 text-xs font-bold block w-full text-left mb-2 transition"><i class="fa-solid fa-unlock"></i> Mở khóa (Cho hiện lại)</button>`;
                 }
 
-
-                // GIAO DIỆN TICK XÁC MINH
                 const verifyBadge = w.is_verified 
                     ? `<span class="text-blue-600 font-bold text-xs"><i class="fa-solid fa-circle-check"></i> Đã cấp tick</span>`
                     : `<span class="text-gray-400 font-bold text-xs">Chưa có tick</span>`;
@@ -144,7 +158,6 @@
                 const verifyBtn = w.is_verified
                     ? `<button onclick="toggleVerify('${w.id}', true)" class="text-orange-500 hover:text-orange-700 text-xs font-bold block mt-1"><i class="fa-solid fa-xmark-circle"></i> Bỏ tick</button>`
                     : `<button onclick="toggleVerify('${w.id}', false)" class="text-blue-600 hover:text-blue-800 text-xs font-bold block mt-1"><i class="fa-solid fa-check"></i> Cấp tick xanh</button>`;
-
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-blue-50/50 transition border-b border-gray-100">
@@ -157,24 +170,16 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-4 py-4 font-bold text-gray-700">
-                            ${w.phone}
-                        </td>
-                        <td class="px-4 py-4">
-                            ${statusBadge}
-                        </td>
-                        <td class="px-4 py-4 bg-gray-50/30 border-l border-gray-100">
-                            ${verifyBadge}
-                            ${verifyBtn}
-                        </td>
-                        <td class="px-4 py-4 border-l border-gray-100">
-                            ${statusBtn}
-                        </td>
+                        <td class="px-4 py-4 font-bold text-gray-700">${w.phone}</td>
+                        <td class="px-4 py-4">${statusBadge}</td>
+                        <td class="px-4 py-4 bg-gray-50/30 border-l border-gray-100">${verifyBadge}${verifyBtn}</td>
+                        <td class="px-4 py-4 border-l border-gray-100">${statusBtn}</td>
                     </tr>
                 `;
             });
 
             loadReviews();
+            loadReports();
         }
 
         async function loadReviews() {
@@ -207,14 +212,61 @@
                         tbody.innerHTML += `
                             <tr class="hover:bg-gray-50 transition border-b border-gray-50">
                                 <td class="px-4 py-4 font-bold text-blue-800 text-xs">${workerName}</td>
+                                <td class="px-4 py-4"><p class="text-sm font-medium text-black">${r.text}</p><p class="text-[10px] text-gray-400 mt-1">${new Date(r.timestamp).toLocaleString('vi-VN')}</p></td>
+                                <td class="px-4 py-4">${rBadge}</td>
+                                <td class="px-4 py-4 bg-gray-50/50">${toggleBtn}<button onclick="deleteReview('${workerId}', '${reviewId}')" class="text-red-600 hover:text-red-800 text-xs font-bold"><i class="fa-solid fa-trash"></i> Xóa hẳn</button></td>
+                            </tr>
+                        `;
+                    });
+                });
+            });
+        }
+
+        async function loadReports() {
+            const reportsRef = ref(rtdb, 'reports');
+            onValue(reportsRef, (snapshot) => {
+                const data = snapshot.val();
+                const tbody = document.getElementById('reportTable');
+                tbody.innerHTML = '';
+
+                if (!data) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-5 text-gray-500">Chưa có báo cáo vi phạm nào.</td></tr>';
+                    return;
+                }
+
+                Object.keys(data).forEach(workerId => {
+                    const worker = workersData.find(x => x.id === workerId);
+                    const workerName = worker ? worker.fullname : "Thợ đã bị xóa";
+                    
+                    const isHidden = worker ? worker.is_hidden : true;
+                    const statusBadge = isHidden 
+                        ? `<span class="px-2 py-1 bg-red-100 text-red-700 rounded-md text-[10px] font-bold"><i class="fa-solid fa-lock"></i> Hồ sơ Đang Bị Khóa Ẩn</span>`
+                        : `<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-[10px] font-bold"><i class="fa-solid fa-eye"></i> Hồ sơ Đang Hiển thị</span>`;
+
+                    const workerReports = data[workerId];
+
+                    Object.keys(workerReports).forEach(reportId => {
+                        const r = workerReports[reportId];
+                        
+                        // HIỂN THỊ THÔNG TIN LIÊN HỆ CỦA NGƯỜI BÁO CÁO
+                        const reporterContact = r.contact ? r.contact : "Không để lại LH (Báo cáo cũ)";
+
+                        const quickLockBtn = !isHidden && worker 
+                            ? `<button onclick="hideWorker('${workerId}')" class="text-red-600 hover:text-red-800 text-xs font-bold block mb-2"><i class="fa-solid fa-lock"></i> Khóa thợ này ngay lập tức</button>` 
+                            : ``;
+
+                        tbody.innerHTML += `
+                            <tr class="hover:bg-red-50/50 transition border-b border-gray-50">
+                                <td class="px-4 py-4 font-black text-red-800 text-xs uppercase">${workerName}</td>
                                 <td class="px-4 py-4">
-                                    <p class="text-sm font-medium text-black">${r.text}</p>
+                                    <p class="text-sm font-bold text-red-600 bg-white inline-block px-3 py-1 rounded-md border border-red-100 shadow-sm">${r.reason}</p>
+                                    <p class="text-[11px] font-bold text-gray-700 mt-2"><i class="fa-solid fa-address-book text-blue-600"></i> LH xác minh: <span class="text-blue-700 bg-blue-50 px-1 rounded">${reporterContact}</span></p>
                                     <p class="text-[10px] text-gray-400 mt-1">${new Date(r.timestamp).toLocaleString('vi-VN')}</p>
                                 </td>
-                                <td class="px-4 py-4">${rBadge}</td>
-                                <td class="px-4 py-4 bg-gray-50/50">
-                                    ${toggleBtn}
-                                    <button onclick="deleteReview('${workerId}', '${reviewId}')" class="text-red-600 hover:text-red-800 text-xs font-bold"><i class="fa-solid fa-trash"></i> Xóa hẳn</button>
+                                <td class="px-4 py-4">${statusBadge}</td>
+                                <td class="px-4 py-4 bg-gray-50/50 border-l border-gray-100">
+                                    ${quickLockBtn}
+                                    <button onclick="deleteReport('${workerId}', '${reportId}')" class="text-gray-500 hover:text-gray-800 text-xs font-bold"><i class="fa-solid fa-check"></i> Đã xử lý (Xóa)</button>
                                 </td>
                             </tr>
                         `;
@@ -223,41 +275,34 @@
             });
         }
 
-        // --- 3 HÀM XỬ LÝ TRẠNG THÁI HIỂN THỊ CHUYÊN NGHIỆP ---
 
-        // 1. Duyệt tài khoản mới đăng ký
+        // --- CÁC HÀM XỬ LÝ TRẠNG THÁI HIỂN THỊ ---
+
         window.approveWorker = async (id) => {
             try {
-                // Đánh dấu là đã duyệt (is_approved: true) và cho phép hiển thị (is_hidden: false)
                 await updateDoc(doc(db, "workers", id), { is_hidden: false, is_approved: true });
-                
                 const w = workersData.find(x => x.id === id);
                 if (w && w.email) {
                     try {
                         await addDoc(collection(db, "mail"), {
                             to: [w.email],
-                            message: { 
-                                subject: `🎉 SÀN DỊCH VỤ: Hồ sơ của bạn đã được duyệt!`, 
-                                html: `<p>Chào ${w.fullname},</p><p>Hồ sơ năng lực của bạn đã được Admin phê duyệt và hiện đang hiển thị công khai trên hệ thống Sàn Dịch Vụ.</p><p>Chúc bạn có thêm nhiều khách hàng mới!</p>` 
-                            }
+                            message: { subject: `🎉 SÀN DỊCH VỤ: Hồ sơ của bạn đã được duyệt!`, html: `<p>Chào ${w.fullname},</p><p>Hồ sơ năng lực của bạn đã được Admin phê duyệt và hiện đang hiển thị công khai trên hệ thống Sàn Dịch Vụ.</p><p>Chúc bạn có thêm nhiều khách hàng mới!</p>` }
                         });
-                    } catch (e) { console.error("Lỗi gửi mail duyệt:", e); }
+                    } catch (e) {}
                 }
                 loadWorkers();
             } catch (e) { alert("Lỗi: " + e); }
         };
 
-        // 2. Ẩn / Khóa tài khoản đang hiển thị (khi bị Report)
         window.hideWorker = async (id) => {
-            if(confirm("Bạn có chắc muốn ẨN/KHÓA hồ sơ này khỏi trang chủ?")) {
+            if(confirm("Bạn có chắc muốn KHÓA / ẨN hồ sơ này khỏi trang chủ?")) {
                 try {
                     await updateDoc(doc(db, "workers", id), { is_hidden: true });
-                    loadWorkers();
+                    loadWorkers(); 
                 } catch (e) { alert("Lỗi: " + e); }
             }
         };
 
-        // 3. Mở khóa lại tài khoản đã bị phạt ẩn
         window.showWorker = async (id) => {
             try {
                 await updateDoc(doc(db, "workers", id), { is_hidden: false });
@@ -265,8 +310,6 @@
             } catch (e) { alert("Lỗi: " + e); }
         };
 
-
-        // --- XỬ LÝ XÁC MINH ---
         window.toggleVerify = async (id, currentStatus) => {
             try {
                 await updateDoc(doc(db, "workers", id), { is_verified: !currentStatus });
@@ -278,34 +321,44 @@
                             to: [w.email, "chaysaigon@gmail.com"],
                             message: { subject: `✔️ SÀN DỊCH VỤ: Cập nhật trạng thái Xác minh`, html: `<p>Chào ${w.fullname},</p><p>Tài khoản của bạn trên hệ thống hiện <b>${statusText}</b>.</p>` }
                         });
-                    } catch (e) { console.error("Lỗi gửi mail xác minh:", e); }
+                    } catch (e) {}
                 }
                 loadWorkers(); 
             } catch (e) { alert("Lỗi: " + e); }
         };
 
         window.toggleReviewVisibility = async (workerId, reviewId, currentStatus) => {
-            try {
-                await update(ref(rtdb, `reviews/${workerId}/${reviewId}`), { is_hidden: !currentStatus });
-            } catch (e) { alert("Lỗi: " + e); }
+            try { await update(ref(rtdb, `reviews/${workerId}/${reviewId}`), { is_hidden: !currentStatus }); } 
+            catch (e) { alert("Lỗi: " + e); }
         };
 
         window.deleteReview = async (workerId, reviewId) => {
             if(confirm("Hành động này sẽ XÓA VĨNH VIỄN đánh giá này. Bạn có chắc chắn?")) {
-                try {
-                    await remove(ref(rtdb, `reviews/${workerId}/${reviewId}`));
-                } catch (e) { alert("Lỗi: " + e); }
+                try { await remove(ref(rtdb, `reviews/${workerId}/${reviewId}`)); } 
+                catch (e) { alert("Lỗi: " + e); }
+            }
+        };
+
+        window.deleteReport = async (workerId, reportId) => {
+            if(confirm("Xóa bỏ báo cáo này khỏi danh sách vi phạm?")) {
+                try { await remove(ref(rtdb, `reports/${workerId}/${reportId}`)); } 
+                catch (e) { alert("Lỗi: " + e); }
             }
         };
 
         window.switchTab = (tabName) => {
-            document.getElementById('tab-workers').classList.add('hidden');
-            document.getElementById('tab-reviews').classList.add('hidden');
-            document.getElementById('btn-workers').className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 border border-gray-200";
-            document.getElementById('btn-reviews').className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 border border-gray-200";
+            ['workers', 'reviews', 'reports'].forEach(tab => {
+                document.getElementById('tab-' + tab).classList.add('hidden');
+                document.getElementById('btn-' + tab).className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200";
+            });
             
             document.getElementById('tab-' + tabName).classList.remove('hidden');
-            document.getElementById('btn-' + tabName).className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-blue-600 text-white shadow-md";
+            
+            if (tabName === 'reports') {
+                document.getElementById('btn-reports').className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-red-600 text-white shadow-md";
+            } else {
+                document.getElementById('btn-' + tabName).className = "w-full text-left px-5 py-4 rounded-xl font-bold transition-all bg-blue-600 text-white shadow-md";
+            }
         };
 
         loadWorkers();
