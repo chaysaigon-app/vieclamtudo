@@ -98,7 +98,7 @@
             </div>
 
             <div class="pt-6">
-                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-5 rounded-2xl font-black text-lg uppercase tracking-wider hover:from-orange-500 hover:to-red-600 hover:shadow-xl transition-all shadow-md">
+                <button type="submit" id="btnSubmit" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-5 rounded-2xl font-black text-lg uppercase tracking-wider hover:from-orange-500 hover:to-red-600 hover:shadow-xl transition-all shadow-md">
                     Hoàn Tất Đăng Ký
                 </button>
             </div>
@@ -108,7 +108,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // BỔ SUNG THÊM LỆNH query, where ĐỂ CHECK TRÙNG LẶP SỐ ĐIỆN THOẠI
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
@@ -148,42 +149,62 @@
 
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            const submitBtn = document.getElementById('btnSubmit');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG XỬ LÝ...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG KIỂM TRA DỮ LIỆU...';
 
-            const services = [];
-            document.querySelectorAll('.service-item').forEach(el => {
-                const title = el.querySelector('.s-title').value.trim();
-                const price = el.querySelector('.s-price').value.trim();
-                const unit = el.querySelector('.s-unit').value.trim();
-                if(title && price) services.push({ title, price: Number(price), unit: unit || 'lần' });
-            });
-
-            const workerData = {
-                fullname: document.getElementById('fullname').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                birth: parseInt(document.getElementById('birth').value),
-                gender: document.getElementById('gender').value,
-                height: document.getElementById('height').value.trim(),
-                weight: document.getElementById('weight').value.trim(),
-                job_id: document.getElementById('job_id').value,
-                province_id: document.getElementById('province_id').value,
-                last_location: document.getElementById('last_location').value.trim(),
-                exp: document.getElementById('exp').value.trim(),
-                working_time: document.getElementById('working_time').value.trim(),
-                expected_salary: document.getElementById('expected_salary').value.trim(),
-                avatar: document.getElementById('avatar').value.trim(),
-                services: services,
-                is_verified: false,
-                is_hidden: true, // MẶC ĐỊNH LÀ ẨN CHỜ DUYỆT
-                created_at: Date.now()
-            };
+            const phoneInput = document.getElementById('phone').value.trim();
 
             try {
+                // 1. BƯỚC QUAN TRỌNG: KIỂM TRA TRÙNG LẶP SỐ ZALO/ĐIỆN THOẠI TRÊN DATABASE
+                const q = query(collection(db, "workers"), where("phone", "==", phoneInput));
+                const querySnapshot = await getDocs(q);
+
+                // NẾU TÌM THẤY SỐ NÀY ĐÃ CÓ TRONG HỆ THỐNG -> CHẶN NGAY LẬP TỨC
+                if (!querySnapshot.empty) {
+                    alert("CẢNH BÁO: Số Zalo/Điện thoại này đã được sử dụng để đăng ký hồ sơ trên Sàn! Mỗi số liên hệ chỉ được tạo 1 tài khoản duy nhất. Vui lòng kiểm tra lại.");
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'HOÀN TẤT ĐĂNG KÝ';
+                    return; // Dừng toàn bộ code ở đây, không cho chạy tiếp
+                }
+
+                // 2. NẾU SỐ ĐIỆN THOẠI HỢP LỆ (CHƯA TỪNG ĐĂNG KÝ) THÌ MỚI CHO ĐI TIẾP
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG ĐẨY HỒ SƠ LÊN SÀN...';
+
+                const services = [];
+                document.querySelectorAll('.service-item').forEach(el => {
+                    const title = el.querySelector('.s-title').value.trim();
+                    const price = el.querySelector('.s-price').value.trim();
+                    const unit = el.querySelector('.s-unit').value.trim();
+                    if(title && price) services.push({ title, price: Number(price), unit: unit || 'lần' });
+                });
+
+                const workerData = {
+                    fullname: document.getElementById('fullname').value.trim(),
+                    phone: phoneInput,
+                    email: document.getElementById('email').value.trim(),
+                    birth: parseInt(document.getElementById('birth').value),
+                    gender: document.getElementById('gender').value,
+                    height: document.getElementById('height').value.trim(),
+                    weight: document.getElementById('weight').value.trim(),
+                    job_id: document.getElementById('job_id').value,
+                    province_id: document.getElementById('province_id').value,
+                    last_location: document.getElementById('last_location').value.trim(),
+                    exp: document.getElementById('exp').value.trim(),
+                    working_time: document.getElementById('working_time').value.trim(),
+                    expected_salary: document.getElementById('expected_salary').value.trim(),
+                    avatar: document.getElementById('avatar').value.trim(),
+                    services: services,
+                    is_verified: false,
+                    is_hidden: true, // MẶC ĐỊNH LÀ ẨN CHỜ DUYỆT
+                    created_at: Date.now()
+                };
+
+                // LƯU DATA LÊN FIRESTORE
                 await addDoc(collection(db, "workers"), workerData);
 
+                // GỬI MAIL THÔNG BÁO CHO ADMIN
                 await addDoc(collection(db, "mail"), {
                     to: ["chaysaigon@gmail.com"],
                     message: {
@@ -192,6 +213,7 @@
                     }
                 });
 
+                // GỬI MAIL CHO NGƯỜI ĐĂNG KÝ
                 await addDoc(collection(db, "mail"), {
                     to: [workerData.email],
                     message: {
@@ -200,9 +222,10 @@
                     }
                 });
 
-                // ĐÃ SỬA: CHUYỂN THẲNG QUA ZALO ADMIN KHI BẤM OK
+                // HIỆN THÔNG BÁO VÀ CHUYỂN QUA ZALO ADMIN
                 alert("Đăng ký thành công! Vui lòng liên hệ Admin để được xét duyệt và kích hoạt tài khoản của bạn.");
                 window.location.href = "https://zalo.me/0909108890"; 
+
             } catch (error) {
                 alert("Đã xảy ra lỗi khi đăng ký: " + error.message);
                 submitBtn.disabled = false;
