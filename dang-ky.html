@@ -41,6 +41,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="text" id="fullname" placeholder="Họ và tên thật" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold placeholder-gray-500">
                     <input type="tel" id="phone" placeholder="Số điện thoại / Zalo liên hệ" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold placeholder-gray-500">
+                    <input type="email" id="email" placeholder="Email nhận thông báo hệ thống" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-bold placeholder-gray-500 md:col-span-2">
+                    
                     <input type="number" id="birth" placeholder="Năm sinh (VD: 1995)" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
                     <select id="gender" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium appearance-none cursor-pointer">
                         <option value="Nam">Giới tính: Nam</option>
@@ -67,14 +69,14 @@
                         <option value="">-- Chọn Tỉnh / Thành phố --</option>
                     </select>
                 </div>
-                <input type="text" id="last_location" placeholder="Khu vực phục vụ cụ thể (VD: Các quận nội thành, Quận 1, Quận 3...)" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
+                <input type="text" id="last_location" placeholder="Khu vực phục vụ cụ thể (VD: Các quận nội thành...)" class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
             </div>
 
             <hr class="border-gray-200">
 
             <div>
                 <label class="block text-xs font-black text-black uppercase tracking-widest mb-4">4. Năng lực & Yêu cầu</label>
-                <textarea id="exp" required placeholder="Mô tả chi tiết kinh nghiệm, kỹ năng, điểm mạnh của bạn để thuyết phục khách hàng..." class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium h-32 mb-4 placeholder-gray-500"></textarea>
+                <textarea id="exp" required placeholder="Mô tả chi tiết kinh nghiệm, kỹ năng, điểm mạnh của bạn..." class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium h-32 mb-4 placeholder-gray-500"></textarea>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="text" id="working_time" placeholder="Thời gian làm việc (VD: 8h-20h mỗi ngày)" required class="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition text-black font-medium placeholder-gray-500">
@@ -88,8 +90,7 @@
                 <label class="block text-xs font-black text-black uppercase tracking-widest mb-2">5. Bảng giá chi tiết</label>
                 <p class="text-xs font-medium text-gray-600 mb-4">Liệt kê cụ thể từng hạng mục dịch vụ để khách hàng dễ dàng tham khảo.</p>
                 
-                <div id="serviceList" class="space-y-3 mb-5">
-                    </div>
+                <div id="serviceList" class="space-y-3 mb-5"></div>
                 
                 <button type="button" onclick="addServiceRow()" class="text-sm font-bold text-blue-600 hover:text-blue-800 transition flex items-center gap-2 px-2">
                     <i class="fa-solid fa-circle-plus"></i> Thêm một dịch vụ khác
@@ -100,9 +101,6 @@
                 <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-5 rounded-2xl font-black text-lg uppercase tracking-wider hover:from-orange-500 hover:to-red-600 hover:shadow-xl transition-all shadow-md">
                     Hoàn Tất Đăng Ký
                 </button>
-                <p class="text-center text-xs font-medium text-gray-500 mt-4">
-                    Bằng việc nhấp "Hoàn tất", bạn đồng ý tự chịu trách nhiệm về tính chính xác của thông tin.
-                </p>
             </div>
 
         </form>
@@ -112,7 +110,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CẤU HÌNH FIREBASE GỐC CỦA BẠN
         const firebaseConfig = {
             apiKey: "AIzaSyBcLuvyxByZ-NXa958BEoHYlhguk4jNvr8",
             authDomain: "vieclamtudo-7a146.firebaseapp.com",
@@ -125,35 +122,23 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // NẠP NGÀNH NGHỀ & TỈNH THÀNH VÀO DROPDOWN
         async function loadOptions() {
             try {
                 const [jobsSnap, provsSnap] = await Promise.all([
-                    getDocs(collection(db, "jobs")),
-                    getDocs(collection(db, "provinces"))
+                    getDocs(collection(db, "jobs")), getDocs(collection(db, "provinces"))
                 ]);
-                
                 const jobSelect = document.getElementById('job_id');
                 const provSelect = document.getElementById('province_id');
-
-                jobsSnap.forEach(doc => {
-                    jobSelect.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
-                });
-                
-                provsSnap.forEach(doc => {
-                    provSelect.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
-                });
-            } catch (error) {
-                console.error("Lỗi tải danh mục:", error);
-            }
+                jobsSnap.forEach(doc => { jobSelect.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; });
+                provsSnap.forEach(doc => { provSelect.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; });
+            } catch (error) { console.error("Lỗi tải danh mục:", error); }
         }
 
-        // THÊM DÒNG BẢNG GIÁ DỊCH VỤ
         window.addServiceRow = () => {
             const div = document.createElement('div');
             div.className = "flex gap-2 service-item items-center";
             div.innerHTML = `
-                <input type="text" placeholder="Tên dịch vụ (VD: Cắt tóc nam)" class="flex-[2] p-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 text-sm font-medium text-black s-title">
+                <input type="text" placeholder="Tên dịch vụ" class="flex-[2] p-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 text-sm font-medium text-black s-title">
                 <input type="number" placeholder="Giá" class="flex-[1] p-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 text-sm font-bold text-blue-700 s-price">
                 <input type="text" placeholder="Đơn vị" class="w-20 p-3 bg-gray-50 border border-gray-300 rounded-xl outline-none focus:border-blue-600 text-sm font-medium text-black text-center s-unit" value="lần">
                 <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-red-500 p-2 transition"><i class="fa-solid fa-trash"></i></button>
@@ -161,29 +146,24 @@
             document.getElementById('serviceList').appendChild(div);
         };
 
-        // XỬ LÝ GỬI FORM
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
-            
             const submitBtn = e.target.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG XỬ LÝ...';
 
-            // Thu thập bảng giá
             const services = [];
             document.querySelectorAll('.service-item').forEach(el => {
                 const title = el.querySelector('.s-title').value.trim();
                 const price = el.querySelector('.s-price').value.trim();
                 const unit = el.querySelector('.s-unit').value.trim();
-                if(title && price) {
-                    services.push({ title, price: Number(price), unit: unit || 'lần' });
-                }
+                if(title && price) services.push({ title, price: Number(price), unit: unit || 'lần' });
             });
 
-            // Gói dữ liệu gửi lên Firebase
             const workerData = {
                 fullname: document.getElementById('fullname').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(), // Lấy Email
                 birth: parseInt(document.getElementById('birth').value),
                 gender: document.getElementById('gender').value,
                 height: document.getElementById('height').value.trim(),
@@ -196,15 +176,35 @@
                 expected_salary: document.getElementById('expected_salary').value.trim(),
                 avatar: document.getElementById('avatar').value.trim(),
                 services: services,
-                is_verified: false, // MẶC ĐỊNH LÀ CHƯA XÁC MINH (Dấu tick mờ)
+                is_verified: false,
                 created_at: Date.now()
             };
 
             try {
-                // Ghi vào collection 'workers'
+                // 1. Lưu hồ sơ vào bảng workers
                 await addDoc(collection(db, "workers"), workerData);
-                alert("Đăng ký thành công! Tài khoản của bạn đang ở trạng thái 'Chưa xác minh'. Hệ thống sẽ chuyển hướng về Trang chủ.");
-                window.location.href = "index.html"; // Chuyển thẳng về trang chủ để xem kết quả
+
+                // 2. Tạo lệnh gửi Email cho Admin
+                await addDoc(collection(db, "mail"), {
+                    to: ["chaysaigon@gmail.com"],
+                    message: {
+                        subject: "🔔 CÓ ĐỐI TÁC MỚI ĐĂNG KÝ: " + workerData.fullname,
+                        html: `<p>Đối tác <b>${workerData.fullname}</b> vừa đăng ký lên sàn.</p><p>SĐT: ${workerData.phone}</p><p>Email: ${workerData.email}</p><p>Khu vực: ${workerData.last_location}</p><p>Bạn hãy vào trang Admin để kiểm duyệt.</p>`
+                    }
+                });
+
+                // 3. Tạo lệnh gửi Email cho Đối tác
+                await addDoc(collection(db, "mail"), {
+                    to: [workerData.email],
+                    message: {
+                        subject: "Chào mừng bạn đến với Sàn Dịch Vụ Đa Ngành Nghề",
+                        html: `<p>Chào ${workerData.fullname},</p><p>Cảm ơn bạn đã đăng ký hồ sơ năng lực.</p><p>Tài khoản của bạn hiện đang ở trạng thái chưa xác minh. Vui lòng liên hệ Admin qua Zalo: 0909108890 để được hỗ trợ kích hoạt sớm nhất!</p>`
+                    }
+                });
+
+                // 4. Thông báo và chuyển hướng (Đúng yêu cầu của bạn)
+                alert("Đăng ký thành công, vui lòng liên hệ admin để kích hoạt tài khoản của bạn.");
+                window.location.href = "index.html"; 
             } catch (error) {
                 alert("Đã xảy ra lỗi khi đăng ký: " + error.message);
                 submitBtn.disabled = false;
@@ -212,8 +212,7 @@
             }
         };
 
-        // Khởi tạo ban đầu
-        addServiceRow(); // Thêm sẵn 1 dòng dịch vụ trống
+        addServiceRow();
         loadOptions();
     </script>
 </body>
