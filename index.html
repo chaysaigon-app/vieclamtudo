@@ -34,7 +34,7 @@
             <div class="max-w-7xl mx-auto">
                 <div class="mb-8 text-center md:text-left">
                     <h2 class="text-3xl md:text-5xl font-black tracking-tight text-black mb-4">
-                        Tìm là thấy, <span class="text-blue-600">tin là dùng!</span>
+                        Tìm là thấy, <span class="text-blue-600">dùng là mê!</span>
                     </h2>
                     <p class="text-sm md:text-base text-black font-medium leading-relaxed max-w-4xl">
                         Bất kể bạn cần gì, chúng tôi đều có đối tác sẵn sàng! 🛠️🧹💆‍♂️ Từ những hỏng hóc nhỏ trong nhà đến nhu cầu làm đẹp, học nghề, gia sư, tập luyện chuyên nghiệp. Giá cả công khai & Dịch vụ chu đáo. Khám phá ngay hôm nay!
@@ -340,6 +340,7 @@
         window.openReportModal = (id) => { currentReportId = id; document.getElementById('reportModal').classList.remove('hidden'); };
         window.closeReportModal = () => { document.getElementById('reportModal').classList.add('hidden'); };
         
+        // HÀM BÁO CÁO CÓ KIỂM TRA ZALO/EMAIL
         window.submitReport = async (r) => { 
             const contactInput = document.getElementById('reporterContact');
             const contactInfo = contactInput.value.trim();
